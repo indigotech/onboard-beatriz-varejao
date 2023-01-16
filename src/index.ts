@@ -1,33 +1,20 @@
-import { ApolloServer } from "@apollo/server";
+import { AppDataSource } from "./data-source"
+import { User } from "./entity/User"
 
-import { startStandaloneServer } from "@apollo/server/standalone";
+AppDataSource.initialize().then(async () => {
 
-const typeDefs = `
+    console.log("Inserting a new user into the database...")
+    const user = new User()
+    user.firstName = "euzinha12"
+    user.password = "abc123"
+ 
+    await AppDataSource.manager.save(user)
+    console.log("Saved a new user with id: " + user.id)
 
-  type Query {
-    hello: String
-  }
-`;
+    console.log("Loading users from the database...")
+    const users = await AppDataSource.manager.find(User)
+    console.log("Loaded users: ", users)
 
-// The root provides a resolver function for each API endpoint
-const resolvers = {
-  Query: {
-    hello: () => {
-      return "Hello world!";
-    },
-  },
-};
-// The ApolloServer constructor requires two parameters: your schema
+    console.log("Here you can setup and run express / fastify / any other framework.")
 
-// definition and your set of resolvers.
-
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-});
-
-startStandaloneServer(server, {
-  listen: { port: 4000 },
-}).then(({ url }) => {
-  console.log(`🚀  Server ready at: ${url}`);
-});
+}).catch(error => console.log(error))
