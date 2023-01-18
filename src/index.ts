@@ -10,7 +10,12 @@ const typeDefs = `
   type Query {
     hello: String
   }
-  input UserInput { name: String!, email: String!, birthDate: String!, password: String! }
+  input UserInput {
+     name: String!
+     email: String!
+     birthDate: String!
+     password: String! 
+  }
   type User {
     id: Int!
     name: String!
@@ -23,9 +28,9 @@ const typeDefs = `
 `;
 const resolvers = {
   Mutation: {
-    createUser: (data: UserInput) => {
-      const ndata: User = { id: 1, name: data.name, email: data.email, birthDate: data.birthDate };
-      return ndata;
+    createUser: (_, args: { data: UserInput }): User => {
+      const { data } = args;
+      return { id: 1, ...data };
     },
   },
   Query: {
