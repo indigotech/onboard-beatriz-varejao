@@ -29,12 +29,12 @@ const typeDefs = `
     password: String!
   }
   type Mutation {
-    createUser (data: UserInput): User
+  createUser (data: UserInput): User
   }
 `;
 
 const resolvers = {
-  /* Mutation: {
+  Mutation: {
     createUser: async (_, args: { data: UserInput }) => {
       const { data } = args;
       console.log('Inserting a new user into the database...');
@@ -45,9 +45,9 @@ const resolvers = {
       user.birthDate = data.birthDate;
       await AppDataSource.manager.save(user);
       console.log('Saved a new user with id: ' + user.id);
-      return { id: user.id, email: user.email };
+      return { id: user.id, email: user.email, name: user.name, birthDate: user.birthDate };
     },
-  },*/
+  },
   Query: {
     hello: () => {
       return 'Hello world!';
