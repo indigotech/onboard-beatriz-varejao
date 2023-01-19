@@ -2,6 +2,7 @@ import { UserInput } from './UserInput';
 import { User } from './entity/User';
 import { AppDataSource } from './data-source';
 import { CustomError } from './custom-errror';
+import { Md5 } from 'ts-md5';
 
 export const resolvers = {
   Mutation: {
@@ -16,14 +17,14 @@ export const resolvers = {
       if (thereIsNumber(data.password)) {
         throw new CustomError('A senha deve conter pelo menos 1 número', 400);
       }
-      const bool = await emailAlreadyUsed(data.email);
-      if (bool) {
+      const hasEmail = await emailAlreadyUsed(data.email);
+      if (hasEmail) {
         throw new CustomError('Email já utilizado', 400);
       }
       console.log('Inserting a new user into the database...');
       const user = new User();
       user.name = data.name;
-      user.password = data.password;
+      user.hash = Md5.hashStr(data.password);
       user.email = data.email;
       user.birthDate = data.birthDate;
       await AppDataSource.manager.save(user);
@@ -72,8 +73,8 @@ function thereIsLetter(str: string) {
     'z',
   ];
   let def = false;
-  alf.forEach(function (letra) {
-    if (str.includes(letra)) {
+  alf.forEach(function (letter) {
+    if (str.includes(letter)) {
       def = true;
     }
   });
@@ -85,9 +86,5 @@ async function emailAlreadyUsed(str: string) {
   const user = await userRepository.findOneBy({
     email: str,
   });
-  let def = false;
-  if (user != null) {
-    def = true;
-  }
-  return def;
+  return user != null;
 }

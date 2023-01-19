@@ -13,7 +13,7 @@ export const typeDefs = `#graphql
     name: String!
     email: String!
     birthDate: String!
-    password: String!
+    hash: String!
   }
   type Mutation {
   createUser (data: UserInput): User
