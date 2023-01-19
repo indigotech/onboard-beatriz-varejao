@@ -15,5 +15,5 @@ export class User {
   birthDate: string;
 
   @Column()
-  password: string;
+  hash: string;
 }
