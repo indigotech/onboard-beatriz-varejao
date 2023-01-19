@@ -14,7 +14,7 @@ export const resolvers = {
       user.birthDate = data.birthDate;
       await AppDataSource.manager.save(user);
       console.log('Saved a new user with id: ' + user.id);
-      return { id: user.id, email: user.email, name: user.name, birthDate: user.birthDate };
+      return user;
     },
   },
   Query: {

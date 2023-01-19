@@ -1,9 +1,9 @@
 import { setupDatabase } from './database';
 import { setupServer } from './server';
 
-setupgeral();
+setupGeneral();
 
-async function setupgeral() {
+async function setupGeneral() {
   await setupDatabase();
   await setupServer();
 }

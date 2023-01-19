@@ -6,9 +6,6 @@ import { startStandaloneServer } from '@apollo/server/standalone';
 export async function setupServer() {
   const server = new ApolloServer({ typeDefs, resolvers });
 
-  startStandaloneServer(server, {
-    listen: { port: 4000 },
-  }).then(({ url }) => {
-    console.log(`🚀  Server ready at: ${url}`);
-  });
+  const { url } = await startStandaloneServer(server, { listen: { port: 4000 } });
+  console.log(`🚀  Server ready at: ${url}`);
 }
