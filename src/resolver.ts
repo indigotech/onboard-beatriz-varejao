@@ -2,7 +2,6 @@ import { UserInput } from './UserInput';
 import { User } from './entity/User';
 import { AppDataSource } from './data-source';
 import { CustomError } from './custom-errror';
-import { Md5 } from 'ts-md5';
 
 export const resolvers = {
   Mutation: {
@@ -11,20 +10,25 @@ export const resolvers = {
       if (data.password.length < 6) {
         throw new CustomError('A senha deve conter pelo menos 6 caracteres', 400);
       }
-      if (!thereIsLetter(data.password)) {
+      if (!isThereALetter(data.password)) {
         throw new CustomError('A senha deve conter pelo menos 1 letra', 400);
       }
-      if (thereIsNumber(data.password)) {
+      if (isThereANumber(data.password)) {
         throw new CustomError('A senha deve conter pelo menos 1 número', 400);
       }
-      const hasEmail = await emailAlreadyUsed(data.email);
+      const hasEmail = await isEmailAlreadyUsed(data.email);
       if (hasEmail) {
         throw new CustomError('Email já utilizado', 400);
       }
       console.log('Inserting a new user into the database...');
       const user = new User();
       user.name = data.name;
-      user.hash = Md5.hashStr(data.password);
+      user.hash = 'test';
+      const { scrypt } = await import('node:crypto');
+      scrypt(data.password, 'salt', 10, (err, derivedKey) => {
+        if (err) throw new CustomError('Erro Interno', 401, 'erro no algoritmo hash');
+        user.hash = derivedKey.toString('hex');
+      });
       user.email = data.email;
       user.birthDate = data.birthDate;
       await AppDataSource.manager.save(user);
@@ -39,11 +43,11 @@ export const resolvers = {
   },
 };
 
-function thereIsNumber(str: string) {
+function isThereANumber(str: string) {
   return isNaN(parseFloat(str));
 }
 
-function thereIsLetter(str: string) {
+function isThereALetter(str: string) {
   const alf = [
     'a',
     'b',
@@ -74,17 +78,17 @@ function thereIsLetter(str: string) {
   ];
   let def = false;
   alf.forEach(function (letter) {
-    if (str.includes(letter)) {
+    if (str.toLowerCase().includes(letter)) {
       def = true;
     }
   });
   return def;
 }
 
-async function emailAlreadyUsed(str: string) {
+async function isEmailAlreadyUsed(str: string) {
   const userRepository = AppDataSource.getRepository(User);
   const user = await userRepository.findOneBy({
     email: str,
   });
-  return user != null;
+  return user !== null;
 }
