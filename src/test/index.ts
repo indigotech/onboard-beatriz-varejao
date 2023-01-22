@@ -1,14 +1,18 @@
 import { setupServer } from '../server';
+import { setupDatabase } from '../database';
 import axios from 'axios';
 import chai from 'chai';
+import * as dotenv from 'dotenv';
 
 describe('Query hello', () => {
   before(async () => {
-    console.log('entrou');
+    console.log('process.env.DATABASE_URL: ', process.env.DATABASE_URL);
+    dotenv.config({ path: __dirname + '/../../test.env' });
+    console.log('process.env.DATABASE_URL: ', process.env.DATABASE_URL);
+    await setupDatabase();
     await setupServer();
   });
   it('query', async () => {
-    console.log('entrou2');
     const url = 'http://localhost:4000/';
     const query = 'query { hello }';
     const response = await axios.post(url, { query });
