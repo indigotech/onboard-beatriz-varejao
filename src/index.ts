@@ -3,7 +3,7 @@ import { setupServer } from './server';
 
 setupGeneral();
 
-async function setupGeneral() {
+export async function setupGeneral() {
   await setupDatabase();
   await setupServer();
 }

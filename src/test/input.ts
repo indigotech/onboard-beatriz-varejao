@@ -1,22 +1,39 @@
-export const user1 = `#graphql
-mutation {
-    createUser (data: {
-      name: "eu",
-      email: "eu@gmail.com",
-      birthDate: "27/12/1900",
-      password: "mudar123"
-    } 
-  ) {
+export const createdUser = `#graphql
+mutation createUser ($user: UserInput) {
+    createUser ( data: $user) {
       birthDate
       email
       id
       name
   }
 }`;
+export const mutlogin = `#graphql
+mutation login ( $user: LogInputUser) {
+    login (data: $user ) { 
+      user 
+     {
+    birthDate
+      email
+      id
+      name
+  }
+    token
+  }
+  }`;
+
+export const queryUserFind = `#graphql
+query findUser ($email: String){
+    findUser (email: $email) {
+      birthDate
+      email
+      name
+  }
+}`;
 
 export const queryUser = `#graphql
-query {
-    findUser (id: 1) {
+query user ($id: ID!) {
+    user (id: $id) {
+      id
       birthDate
       email
       name
@@ -24,19 +41,26 @@ query {
   }
 }`;
 
+export const userError = [
+  {
+    message: 'Operação não autorizada',
+    code: 405,
+    details: 'token inválido',
+  },
+];
+
+export const userErrorNotFound = [{ message: 'Usuário não encontrado', code: 410 }];
+
 export const userDatabase = {
   data: {
-    findUser: { birthDate: '27/12/1900', email: 'eu@gmail.com', name: 'eu', hash: '7f658385f4d54cba7ce3' },
+    findUser: { birthDate: '27/12/1900', email: 'eu@gmail.com', name: 'eu' },
   },
 };
-
-export const expectedResponse = {
-  data: {
-    createUser: {
-      birthDate: '27/12/1900',
-      email: 'eu@gmail.com',
-      id: '1',
-      name: 'eu',
-    },
-  },
+export const expectedResponse = { birthDate: '27/12/1900', email: 'eu@gmail.com', id: '1', name: 'eu' };
+export const expectedResponseUser = {
+  id: '1',
+  birthDate: '27/12/1900',
+  email: 'eu@gmail.com',
+  name: 'eu',
+  hash: '7f658385f4d54cba7ce3',
 };

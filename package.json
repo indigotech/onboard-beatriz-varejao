@@ -5,12 +5,15 @@
     "start": "node ./build/index.js",
     "typeorm": "typeorm-ts-node-commonjs",
     "lint": "eslint ./src",
-    "test": "mocha -r ts-node/register src/test/index.ts"
+    "test": "mocha -r ts-node/register src/test/index.ts",
+    "seed": "ts-node src/seed.ts"
   },
   "dependencies": {
     "@apollo/server": "4.3.0",
     "axios": "1.2.3",
+    "dotenv": "16.0.3",
     "graphql": "16.6.0",
+    "jsonwebtoken": "9.0.0",
     "pg": "8.8.0",
     "reflect-metadata": "0.1.13",
     "typeorm": "0.3.11"

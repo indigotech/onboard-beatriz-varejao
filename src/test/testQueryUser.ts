@@ -1,13 +1,4 @@
 import { setupServer } from '../server';
-<<<<<<< HEAD
-import { clearDatabase, setupDatabase } from '../database';
-import axios from 'axios';
-import { expect } from 'chai';
-import * as dotenv from 'dotenv';
-import { user1, expectedResponse, queryUser, userDatabase } from './input';
-
-describe('Testes', () => {
-=======
 import { dropDatabase, setupDatabase, clearDatabase } from '../database';
 import * as dotenv from 'dotenv';
 import axios from 'axios';
@@ -15,32 +6,11 @@ import { expect } from 'chai';
 import { queryUser, expectedResponseUser, userError, userErrorNotFound, createdUser } from './input';
 
 describe('Testing Query User', () => {
->>>>>>> 7ee399b (environment setup)
   before(async () => {
     dotenv.config({ path: process.cwd() + '/test.env' });
     await setupDatabase();
     await setupServer();
   });
-<<<<<<< HEAD
-  it('should return Hello World', async () => {
-    const url = 'http://localhost:4000/';
-    const query = 'query { hello }';
-    const response = await axios.post(url, { query });
-    expect(response.data).to.eql({ data: { hello: 'Hello world!' } });
-  });
-  it('creating user', async () => {
-    const url = 'http://localhost:4000';
-    const response = await axios.post(url, { query: user1 });
-    expect(response.data).to.eql(expectedResponse);
-  });
-  it('checking database', async () => {
-    const url = 'http://localhost:4000';
-    const response = await axios.post(url, { query: queryUser });
-    expect(response.data).to.eql(userDatabase);
-  });
-  after(async () => {
-    await clearDatabase();
-=======
   it('should fetch the infos of the first user', async () => {
     const url = 'http://localhost:4000';
     await axios.post(
@@ -108,6 +78,5 @@ describe('Testing Query User', () => {
   });
   after(async () => {
     await dropDatabase();
->>>>>>> 7ee399b (environment setup)
   });
 });
