@@ -15,6 +15,15 @@ export async function creatingUser(data: UserInput) {
   if (!isThereANumber(data.password)) {
     throw new CustomError('A senha deve conter pelo menos 1 número', 400);
   }
+  if (data.birthDate.length !== 10) {
+    throw new CustomError('A data deve estar no formato 00/00/0000', 400);
+  }
+  if (isThereALetter(data.birthDate)) {
+    throw new CustomError('Data de nascimento inválida', 400);
+  }
+  if (!isBirthDateValid(data.birthDate)) {
+    throw new CustomError('Data de nascimento inválida', 400);
+  }
   const hasEmail = await isEmailAlreadyUsed(data.email);
   if (hasEmail) {
     throw new CustomError('Email já utilizado', 400);
@@ -73,6 +82,22 @@ function isThereALetter(str: string) {
     }
   });
   return def;
+}
+
+function isBirthDateValid(str: string) {
+  const day = parseInt(str.substring(0, 2));
+  if (day > 31) {
+    return false;
+  }
+  const month = parseInt(str.substring(3, 5));
+  if (month > 12) {
+    return false;
+  }
+  const year = parseInt(str.substring(6));
+  if (year > 2022) {
+    return false;
+  }
+  return true;
 }
 
 async function isEmailAlreadyUsed(str: string) {
