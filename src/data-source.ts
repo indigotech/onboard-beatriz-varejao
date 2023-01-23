@@ -7,5 +7,4 @@ export const AppDataSource = new DataSource({
   synchronize: true,
   logging: false,
   entities: [User],
-  dropSchema: false,
 });
