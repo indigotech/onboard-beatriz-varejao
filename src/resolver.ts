@@ -25,8 +25,8 @@ export const resolvers = {
       console.log('Inserting a new user into the database...');
       const user = new User();
       user.name = data.name;
-      const funcqueretpromise = promisify(crypto.scrypt);
-      const derivedKey = (await funcqueretpromise(data.password, 'salt', 10)) as Buffer;
+      const promiseCrypto = promisify(crypto.scrypt);
+      const derivedKey = (await promiseCrypto(data.password, 'salt', 10)) as Buffer;
       user.hash = derivedKey.toString('hex');
       user.email = data.email;
       user.birthDate = data.birthDate;
