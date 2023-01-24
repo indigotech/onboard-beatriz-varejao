@@ -2,6 +2,8 @@ import { UserInput } from './UserInput';
 import { User } from './entity/User';
 import { AppDataSource } from './data-source';
 import { CustomError } from './custom-errror';
+import crypto from 'node:crypto';
+import { promisify } from 'node:util';
 
 export const resolvers = {
   Mutation: {
@@ -23,12 +25,9 @@ export const resolvers = {
       console.log('Inserting a new user into the database...');
       const user = new User();
       user.name = data.name;
-      user.hash = 'test';
-      const { scrypt } = await import('node:crypto');
-      scrypt(data.password, 'salt', 10, (err, derivedKey) => {
-        if (err) throw new CustomError('Erro Interno', 401, 'erro no algoritmo hash');
-        user.hash = derivedKey.toString('hex');
-      });
+      const promiseCrypto = promisify(crypto.scrypt);
+      const derivedKey = (await promiseCrypto(data.password, 'salt', 10)) as Buffer;
+      user.hash = derivedKey.toString('hex');
       user.email = data.email;
       user.birthDate = data.birthDate;
       await AppDataSource.manager.save(user);
