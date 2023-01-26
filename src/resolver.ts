@@ -1,7 +1,8 @@
 import { UserInput } from './UserInput';
-import { creatingUser } from './creating-user';
-import { AppDataSource } from './data-source';
-import { User } from './entity/User';
+import { creatingUser, hashPassword } from './creating-user';
+import { LogInputUser, LogOutUser } from './log-user';
+import { findingUser } from './find-user';
+import { CustomError } from './custom-errror';
 
 export const resolvers = {
   Mutation: {
@@ -10,18 +11,23 @@ export const resolvers = {
       const user = await creatingUser(data);
       return user;
     },
+    login: async (_, args: { data: LogInputUser }) => {
+      const { data } = args;
+      const hash = await hashPassword(data.password);
+      const user = await findingUser(data.user);
+      if (user.hash === hash) {
+        return new LogOutUser(user, 'meutoken');
+      }
+      throw new CustomError('Senha Incorreta', 410);
+    },
   },
   Query: {
     hello: () => {
       return 'Hello world!';
     },
-    findUser: async (_, args: { id: number }) => {
-      const { id } = args;
-      const firstUser = await AppDataSource.getRepository(User)
-        .createQueryBuilder('user')
-        .where('user.id = :id', { id })
-        .getOne();
-      return firstUser;
+    findUser: async (_, args: { email: string }) => {
+      const { email } = args;
+      return await findingUser(email);
     },
   },
 };

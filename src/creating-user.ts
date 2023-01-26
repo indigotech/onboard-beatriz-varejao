@@ -107,3 +107,9 @@ async function isEmailAlreadyUsed(str: string) {
   });
   return user !== null;
 }
+
+export async function hashPassword(password: string) {
+  const promiseCrypto = promisify(crypto.scrypt);
+  const derivedKey = (await promiseCrypto(password, 'salt', 10)) as Buffer;
+  return derivedKey.toString('hex');
+}
