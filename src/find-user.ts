@@ -18,7 +18,7 @@ export async function findUserById(id: number) {
     .createQueryBuilder('user')
     .where('user.id = :id', { id })
     .getOne();
-  if (idUser === undefined) {
+  if (idUser == null) {
     throw new CustomError('Usuário não encontrado', 410);
   }
   return idUser;
