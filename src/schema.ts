@@ -18,4 +18,7 @@ export const typeDefs = `#graphql
   type Mutation {
   createUser (data: UserInput): User
   }
+  type Query {
+    findUser (id: ID!): User
+  }
 `;
