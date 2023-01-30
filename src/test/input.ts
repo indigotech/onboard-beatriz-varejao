@@ -48,9 +48,20 @@ mutation {
   }
   }`;
 
-export const queryUser = `#graphql
+export const queryUserFind = `#graphql
 query {
     findUser (email: "eu@gmail.com") {
+      birthDate
+      email
+      name
+      hash
+  }
+}`;
+
+export const queryUser = `#graphql
+query {
+    user (id: 1) {
+      id
       birthDate
       email
       name

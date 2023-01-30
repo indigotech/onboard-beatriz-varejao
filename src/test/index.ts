@@ -40,6 +40,20 @@ describe('Testes', () => {
     expect(response.data.data.login.user).to.eql(expectedResponse);
     expect(authorize(response.data.data.login.token, 1)).to.eql(undefined);
   });
+  it('should create an user and return it', async () => {
+    const url = 'http://localhost:4000';
+    const response = await axios.post(
+      url,
+      { query: queryUser },
+      {
+        headers: {
+          authorization:
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsImlhdCI6MTY3NTAzOTU4MywiZXhwIjoxNjc1NjQ0MzgzfQ.R-wm6pGfw4JazTkSysVALdUAGV_sSxuH42xpjloh_7E',
+        },
+      },
+    );
+    expect(response.data.data.user).to.eql(expectedResponse);
+  });
   after(async () => {
     await clearDatabase();
   });

@@ -32,4 +32,7 @@ export const typeDefs = `#graphql
   type Query {
     findUser (email: String): User
   }
+  type Query {
+    user (id: ID!): User
+  }
 `;
