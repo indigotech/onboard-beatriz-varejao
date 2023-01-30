@@ -8,3 +8,7 @@ export async function findingUser(email: string) {
     .getOne();
   return firstUser;
 }
+export async function lastUser() {
+  const cnt = await AppDataSource.getRepository(User).count();
+  return cnt + 1;
+}

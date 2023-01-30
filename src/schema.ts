@@ -27,7 +27,7 @@ export const typeDefs = `#graphql
   createUser (data: UserInput): User
   }
   type Mutation {
-  login (data: LogInputUser): LogUser
+  login (data: LogInputUser, rememberMe: Boolean): LogUser
   }
   type Query {
     findUser (email: String): User

@@ -30,6 +30,24 @@ mutation {
   }
   }`;
 
+export const mutloginremember = `#graphql
+mutation {
+    login (data: {
+      user: "eu@gmail.com",
+      password: "mudar123"
+    } 
+    rememberMe: true
+  ) { user 
+     {
+    birthDate
+      email
+      id
+      name
+  }
+    token
+  }
+  }`;
+
 export const queryUser = `#graphql
 query {
     findUser (email: "eu@gmail.com") {
@@ -45,26 +63,4 @@ export const userDatabase = {
     findUser: { birthDate: '27/12/1900', email: 'eu@gmail.com', name: 'eu', hash: '7f658385f4d54cba7ce3' },
   },
 };
-export const expecterResponseLog = {
-  data: {
-    login: {
-      user: {
-        birthDate: '27/12/1900',
-        email: 'eu@gmail.com',
-        id: '1',
-        name: 'eu',
-      },
-      token: 'meutoken',
-    },
-  },
-};
-export const expectedResponse = {
-  data: {
-    createUser: {
-      birthDate: '27/12/1900',
-      email: 'eu@gmail.com',
-      id: '1',
-      name: 'eu',
-    },
-  },
-};
+export const expectedResponse = { birthDate: '27/12/1900', email: 'eu@gmail.com', id: '1', name: 'eu' };
