@@ -14,6 +14,7 @@ mutation createUser ($user: UserInput) {
       name
   }
 }`;
+
 export const mutlogin = `#graphql
 mutation login ( $user: LogInputUser) {
     login (data: $user ) { 
@@ -54,6 +55,7 @@ export async function queryBase(query: string, variables, token: string) {
   );
   return response;
 }
+
 export const queryUsers = `#graphql
 query users ($skip: Int, $limit: Int) {
     users ( before: $skip, limit: $limit) {

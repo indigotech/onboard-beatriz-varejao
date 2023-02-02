@@ -34,8 +34,7 @@ export const resolvers = {
     },
     users: async (_, args: { before: number; limit: number }, context) => {
       const { before, limit } = args;
-      const headers = context;
-      const token = headers.headers.authorization;
+      const token = context.headers.authorization;
       authorize(token);
       const users = await listUsers(before, limit);
       const total = await countUsers();
