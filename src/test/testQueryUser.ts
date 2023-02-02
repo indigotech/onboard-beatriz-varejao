@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv';
 import axios from 'axios';
 import { expect } from 'chai';
 import { queryUser, expectedResponseUser, userError, userErrorNotFound, createdUser } from './input';
+import { createToken } from '../create-token';
 
 describe('Testing Query User', () => {
   before(async () => {
@@ -13,6 +14,7 @@ describe('Testing Query User', () => {
   });
   it('should fetch the infos of the first user', async () => {
     const url = 'http://localhost:4000';
+    const token = createToken(1, true);
     await axios.post(
       url,
       {
@@ -28,8 +30,7 @@ describe('Testing Query User', () => {
       },
       {
         headers: {
-          authorization:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsImlhdCI6MTY3NTAzOTU4MywiZXhwIjoxNjc1NjQ0MzgzfQ.R-wm6pGfw4JazTkSysVALdUAGV_sSxuH42xpjloh_7E',
+          authorization: token,
         },
       },
     );
@@ -38,8 +39,7 @@ describe('Testing Query User', () => {
       { query: queryUser, variables: { id: 1 } },
       {
         headers: {
-          authorization:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsImlhdCI6MTY3NTAzOTU4MywiZXhwIjoxNjc1NjQ0MzgzfQ.R-wm6pGfw4JazTkSysVALdUAGV_sSxuH42xpjloh_7E',
+          authorization: token,
         },
       },
     );
@@ -47,13 +47,13 @@ describe('Testing Query User', () => {
   });
   it('should return error User not found', async () => {
     const url = 'http://localhost:4000';
+    const token = createToken(2, true);
     const response = await axios.post(
       url,
       { query: queryUser, variables: { id: 2 } },
       {
         headers: {
-          authorization:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjIsImlhdCI6MTY3NTEwMTc1OSwiZXhwIjoxNjc1MTg4MTU5fQ.fBi0XXEXgfyChjh4_NU01bWoemJCAv_1lYCcqjB7e6o',
+          authorization: token,
         },
       },
     );
@@ -61,13 +61,13 @@ describe('Testing Query User', () => {
   });
   it('should return error token invalid', async () => {
     const url = 'http://localhost:4000';
+    const token = createToken(1, true);
     const response = await axios.post(
       url,
       { query: queryUser, variables: { id: 1 } },
       {
         headers: {
-          authorization:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsImlhdCI6MTY3NTEwMTI5OCwiZXhwIjoxNjc1MTg3Njk4fQ.A1fbvMu-_d3CLXf3Aa0rWnlBCjCOi-V21RzQJ6bpKyA',
+          authorization: token,
         },
       },
     );

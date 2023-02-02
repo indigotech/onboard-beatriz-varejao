@@ -5,7 +5,7 @@
     "start": "node ./build/index.js",
     "typeorm": "typeorm-ts-node-commonjs",
     "lint": "eslint ./src",
-    "test": "mocha -r ts-node/register src/test/index.ts",
+    "test": "mocha -r ts-node/register src/test/index.ts --exit",
     "seed": "ts-node src/seed.ts"
   },
   "dependencies": {

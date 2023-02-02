@@ -4,7 +4,8 @@ import * as dotenv from 'dotenv';
 import axios from 'axios';
 import { expect } from 'chai';
 import { expectedResponse, mutlogin, createdUser } from './input';
-import { authorize } from '../create-token';
+import { authorize, createToken } from '../create-token';
+import { lastUser } from '../find-user';
 
 describe('Testing Login', () => {
   before(async () => {
@@ -14,6 +15,8 @@ describe('Testing Login', () => {
   });
   it('should return a login user', async () => {
     const url = 'http://localhost:4000';
+    const id = await lastUser();
+    const token = createToken(id, true);
     await axios.post(
       url,
       {
@@ -29,8 +32,7 @@ describe('Testing Login', () => {
       },
       {
         headers: {
-          authorization:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsImlhdCI6MTY3NTAzOTU4MywiZXhwIjoxNjc1NjQ0MzgzfQ.R-wm6pGfw4JazTkSysVALdUAGV_sSxuH42xpjloh_7E',
+          authorization: token,
         },
       },
     );
