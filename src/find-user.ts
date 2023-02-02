@@ -16,7 +16,7 @@ export async function lastUser() {
 export async function findUserById(id: number) {
   const idUser = await AppDataSource.getRepository(User).findOneBy({ id });
   if (idUser == null) {
-    throw new CustomError('Usuário não encontrado', 410);
+    throw new CustomError('Usuário não encontrado', 404);
   }
   return idUser;
 }
