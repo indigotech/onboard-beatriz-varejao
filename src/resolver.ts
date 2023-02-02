@@ -1,6 +1,6 @@
 import { UserInput, LogInputUser } from './user-input';
 import { creatingUser, hashPassword } from './creating-user';
-import { findUser, findUserById } from './find-user';
+import { findUser, findUserById, lastUser, listUsers } from './find-user';
 import { CustomError } from './custom-errror';
 import { authorize, createToken } from './create-token';
 
@@ -31,6 +31,16 @@ export const resolvers = {
       authorize(token);
       const user = await findUserById(id);
       return user;
+    },
+    users: async (_, args: { userToReturn: number }, context) => {
+      let { userToReturn } = args;
+      const headers = context;
+      const token = headers.headers.authorization;
+      authorize(token);
+      if (userToReturn == null) {
+        userToReturn = (await lastUser()) - 1;
+      }
+      return await listUsers(userToReturn);
     },
   },
 };

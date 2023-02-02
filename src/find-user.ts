@@ -24,3 +24,11 @@ export async function findUserById(id: number): Promise<User> {
   }
   return idUser;
 }
+export async function listUsers(toList: number) {
+  const listUsers = await AppDataSource.getRepository(User)
+    .createQueryBuilder('user')
+    .orderBy('user.name')
+    .take(toList)
+    .getMany();
+  return listUsers;
+}

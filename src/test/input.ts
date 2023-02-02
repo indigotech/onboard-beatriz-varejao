@@ -14,7 +14,6 @@ mutation createUser ($user: UserInput) {
       name
   }
 }`;
-
 export const mutlogin = `#graphql
 mutation login ( $user: LogInputUser) {
     login (data: $user ) { 
@@ -94,3 +93,13 @@ export async function createRepositoryUser(input: UserInput) {
   await AppDataSource.manager.save(user);
   console.log('Saved a new user with id: ' + user.id);
 }
+
+export const queryUsers = `#graphql
+query users ($limit: Int) {
+    users ( userToReturn: $limit) {
+      birthDate
+      email
+      id
+      name
+  }
+}`;
