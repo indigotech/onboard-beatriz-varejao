@@ -35,6 +35,6 @@ export const typeDefs = `#graphql
     users (before: Int = 0, limit: Int = 10): Page
   }
   type Query {
-    users (userToReturn: Int): [User]
+    users (before: Int, userToReturn: Int): Page
   }
 `;
