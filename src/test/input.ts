@@ -70,7 +70,7 @@ export async function createRepositoryUser(input: UserInput) {
 export const queryUsers = `#graphql
 query users ($limit: Int) {
     users ( limit: $limit) {
-      birthDate
+      birthDat
       email
       id
       name

@@ -6,7 +6,8 @@
     "typeorm": "typeorm-ts-node-commonjs",
     "lint": "eslint ./src",
     "test": "mocha -r ts-node/register src/test/index.ts",
-    "seed": "ts-node src/seed.ts"
+    "seed": "ts-node src/seed.ts",
+    "page": "ts-node src/pages.ts"
   },
   "dependencies": {
     "@apollo/server": "4.3.0",
