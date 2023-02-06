@@ -1,18 +1,16 @@
 import { CustomError } from './custom-errror';
 import jwt from 'jsonwebtoken';
 
+export const JWT_SECRET = 'secret';
+
 export function createToken(id: number, rememberMe?: boolean) {
-  if (rememberMe) {
-    return jwt.sign({ userid: id }, 'secret', { expiresIn: '7d' }, { algorithm: 'RS256' });
-  }
-  return jwt.sign({ userid: id }, 'secret', { expiresIn: '1d' }, { algorithm: 'RS256' });
+  return jwt.sign({ userid: id }, JWT_SECRET, { expiresIn: rememberMe ? '7d' : '1d' }, { algorithm: 'RS256' });
 }
 
 export function authorize(token: string, id: number) {
   try {
-    const decoded = jwt.verify(token, 'secret', { algorithm: 'RS256' });
-    const now = Date.now() / 1000;
-    if (decoded.userid == id && decoded.exp > now) {
+    const decoded = jwt.verify(token, JWT_SECRET, { algorithm: 'RS256' });
+    if (decoded.userid == id) {
       console.log('Operation authorized');
       return;
     }

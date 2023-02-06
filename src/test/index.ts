@@ -12,6 +12,7 @@ describe('Testing Query User', () => {
     await setupDatabase();
     await setupServer();
   });
+
   it('should fetch the infos of the first user', async () => {
     const url = 'http://localhost:4000';
     const token = createToken(1, true);
@@ -45,6 +46,7 @@ describe('Testing Query User', () => {
     );
     expect(response.data.data.user).to.eql(expectedResponseUser);
   });
+
   it('should return error User not found', async () => {
     const url = 'http://localhost:4000';
     const token = createToken(2, true);
@@ -59,6 +61,7 @@ describe('Testing Query User', () => {
     );
     expect(response.data.errors).to.eql(userErrorNotFound);
   });
+
   it('should return error token invalid', async () => {
     const url = 'http://localhost:4000';
     const token = createToken(5, true);

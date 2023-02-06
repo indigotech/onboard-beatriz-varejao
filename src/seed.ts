@@ -78,11 +78,10 @@ async function seed(dir) {
   }
 }
 function formatDate(date) {
-  let d = date.getUTCDate().toString(); // getUTCDate() returns 1 - 31
-  let m = (date.getUTCMonth() + 1).toString(); // getUTCMonth() returns 0 - 11
+  const d = date.getUTCDate().toString(); // getUTCDate() returns 1 - 31
+  const m = (date.getUTCMonth() + 1).toString(); // getUTCMonth() returns 0 - 11
   const y = date.getUTCFullYear().toString(); // getUTCFullYear() returns a 4-digit year
-  let formatted = '';
-  return = d.padStart(2, '0') + '/' + m.padStart(2, '0') + '/' + y; // concatenate for output
+  return d.padStart(2, '0') + '/' + m.padStart(2, '0') + '/' + y; // concatenate for output
 }
 
 function float2int(value: number) {

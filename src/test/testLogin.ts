@@ -13,6 +13,7 @@ describe('Testing Login', () => {
     await setupDatabase();
     await setupServer();
   });
+
   it('should return a login user', async () => {
     const url = 'http://localhost:4000';
     const id = await lastUser();
@@ -48,6 +49,7 @@ describe('Testing Login', () => {
     expect(response.data.data.login.user).to.eql(expectedResponse);
     expect(authorize(response.data.data.login.token, 1)).to.eql(undefined);
   });
+
   after(async () => {
     await clearDatabase();
     await dropDatabase();

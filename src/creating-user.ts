@@ -61,10 +61,7 @@ function isBirthDateValid(date: string) {
       parseInt(formattedDays[0]),
     ).getSeconds();
     const now = Date.now() / 1000;
-    if (epoch > now) {
-      return false;
-    }
-    return true;
+    return epoch < now;
   } catch {
     return false;
   }

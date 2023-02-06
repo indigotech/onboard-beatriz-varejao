@@ -13,6 +13,7 @@ describe('Testing createUser', () => {
     await setupDatabase();
     await setupServer();
   });
+
   it('should create an user and return it', async () => {
     const url = 'http://localhost:4000';
     const id = await lastUser();
@@ -40,6 +41,7 @@ describe('Testing createUser', () => {
     const response2 = await axios.post(url, { query: queryUserFind, variables: { email: 'eu@gmail.com' } });
     expect(response2.data).to.eql(userDatabase);
   });
+
   it('should the user in the database and return it', async () => {
     const url = 'http://localhost:4000';
     const id = await lastUser();
@@ -66,6 +68,7 @@ describe('Testing createUser', () => {
     const response = await axios.post(url, { query: queryUserFind, variables: { email: 'eu@gmail.com' } });
     expect(response.data).to.eql(userDatabase);
   });
+
   after(async () => {
     await clearDatabase();
     await dropDatabase();

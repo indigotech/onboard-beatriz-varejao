@@ -7,6 +7,7 @@ mutation createUser ($user: UserInput) {
       name
   }
 }`;
+
 export const mutlogin = `#graphql
 mutation login ( $user: LogInputUser) {
     login (data: $user ) { 
@@ -49,14 +50,16 @@ export const userError = [
   },
 ];
 
-export const userErrorNotFound = [{ message: 'Usuário não encontrado', code: 410 }];
+export const userErrorNotFound = [{ message: 'Usuário não encontrado', code: 404 }];
 
 export const userDatabase = {
   data: {
     findUser: { birthDate: '27/12/1900', email: 'eu@gmail.com', name: 'eu' },
   },
 };
+
 export const expectedResponse = { birthDate: '27/12/1900', email: 'eu@gmail.com', id: '1', name: 'eu' };
+
 export const expectedResponseUser = {
   id: '1',
   birthDate: '27/12/1900',

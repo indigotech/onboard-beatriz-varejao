@@ -1,6 +1,6 @@
 import { UserInput } from './UserInput';
 import { creatingUser, hashPassword } from './creating-user';
-import { LogInputUser, LogOutUser } from './log-user';
+import { LogInputUser } from './log-user';
 import { findingUser, findUserById, lastUser } from './find-user';
 import { CustomError } from './custom-errror';
 import { authorize, createToken } from './create-token';
@@ -22,7 +22,7 @@ export const resolvers = {
       const user = await findingUser(data.user);
       if (user.hash === hash) {
         const token = createToken(user.id, rememberMe);
-        return new LogOutUser(user, token);
+        return { user, token };
       }
       throw new CustomError('Senha Incorreta', 410);
     },
