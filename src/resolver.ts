@@ -33,7 +33,7 @@ export const resolvers = {
       if (user.adress == undefined) {
         console.log('ok');
         user.adress = [adressData];
-        console.log(user.adress);
+        console.log('aft', user.adress);
       } else user.adress.concat([adressData]);
       console.log('Saved a new adress' + adressData.id);
       return adressData;

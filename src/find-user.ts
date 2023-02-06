@@ -17,11 +17,17 @@ export function countUsers(): Promise<number> {
 }
 
 export async function findUserById(id: number): Promise<User> {
-  const idUser = await repository.findOneBy({ id });
+  const idUser = repository.findOne({
+    where: {
+      id,
+    },
+    relations: {
+      adress: true,
+    },
+  });
   if (!idUser) {
     throw new CustomError('Usuário não encontrado', 404);
   }
-  console.log(idUser);
   return idUser;
 }
 export async function listUsers(skip: number, limit: number) {
