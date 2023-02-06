@@ -34,7 +34,6 @@ export const resolvers = {
         console.log('ok');
         user.adress = [adressData];
         console.log(user.adress);
-        await AppDataSource.manager.save(user);
       } else user.adress.concat([adressData]);
       console.log('Saved a new adress' + adressData.id);
       return adressData;
