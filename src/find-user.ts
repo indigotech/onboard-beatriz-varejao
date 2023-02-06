@@ -21,13 +21,9 @@ export async function findUserById(id: number): Promise<User> {
   if (!idUser) {
     throw new CustomError('Usuário não encontrado', 404);
   }
+  console.log(idUser);
   return idUser;
 }
 export async function listUsers(skip: number, limit: number) {
-  return await AppDataSource.getRepository(User)
-    .createQueryBuilder('user')
-    .skip(skip)
-    .take(limit)
-    .orderBy('user.name')
-    .getMany();
+  return await repository.createQueryBuilder('user').skip(skip).take(limit).orderBy('user.name').getMany();
 }

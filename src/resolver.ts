@@ -3,6 +3,9 @@ import { creatingUser, hashPassword } from './creating-user';
 import { findUser, findUserById, listUsers, countUsers } from './find-user';
 import { CustomError } from './custom-errror';
 import { authorize, createToken } from './create-token';
+import { AdressInput } from './Adress';
+import { AppDataSource } from './data-source';
+import { Adress } from './entity/Adress';
 
 export const resolvers = {
   Mutation: {
@@ -12,6 +15,29 @@ export const resolvers = {
       authorize(token);
       const user = await creatingUser(data);
       return user;
+    },
+    createAdress: async (_, args: { adress: AdressInput; username: string }) => {
+      const { adress, username } = args;
+      const user = await findUser(username);
+      const adressData = new Adress();
+      adressData.CEP = adress.CEP;
+      adressData.Complement = adress.Complement;
+      adressData.City = adress.City;
+      adressData.Neighborhood = adress.Neighborhood;
+      adressData.State = adress.State;
+      adressData.Street = adress.Street;
+      adressData.StreetNumber = adress.StreetNumber;
+      adressData.user = user;
+      await AppDataSource.manager.save(adressData);
+      console.log(user.adress);
+      if (user.adress == undefined) {
+        console.log('ok');
+        user.adress = [adressData];
+        console.log(user.adress);
+        await AppDataSource.manager.save(user);
+      } else user.adress.concat([adressData]);
+      console.log('Saved a new adress' + adressData.id);
+      return adressData;
     },
     login: async (_, args: { data: LogInputUser; rememberMe?: boolean }) => {
       const { data, rememberMe } = args;
@@ -30,6 +56,7 @@ export const resolvers = {
       const token = context.headers.authorization;
       authorize(token);
       const user = await findUserById(id);
+      console.log('user adress', user.adress);
       return user;
     },
     users: async (_, args: { before: number; limit: number }, context) => {

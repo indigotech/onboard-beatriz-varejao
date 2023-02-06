@@ -36,6 +36,16 @@ query user ($id: ID!) {
       birthDate
       email
       name
+      adress {
+        id,
+        CEP,
+        Street,
+        StreetNumber,
+        Complement,
+        Neighborhood,
+        City,
+        State
+      }
   }
 }`;
 
@@ -55,6 +65,48 @@ export async function queryBase(query: string, variables, token: string) {
   );
   return response;
 }
+
+export const responseAdress1 = {
+  id: '1',
+  CEP: '09030-010',
+  Street: 'rua X',
+  StreetNumber: '121',
+  Complement: 'ap22',
+  Neighborhood: 'bairro a',
+  City: 'cidade das esmeraldas',
+  State: 'ww',
+  user: {
+    birthDate: '27/12/1900',
+    email: 'eu@gmail.com',
+    id: '1',
+    name: 'eu',
+  },
+};
+
+export const responseAdress2 = {
+  id: '2',
+  CEP: '04119-903',
+  Street: 'rua W',
+  StreetNumber: '33',
+  Complement: 'ap11',
+  Neighborhood: 'bairro b',
+  City: 'cidade dos jasmins',
+  State: 'xx',
+  user: {
+    birthDate: '27/12/1900',
+    email: 'eu@gmail.com',
+    id: '1',
+    name: 'eu',
+  },
+};
+
+export const userError = [
+  {
+    message: 'Operação não autorizada',
+    code: 405,
+    details: 'token inválido',
+  },
+];
 
 export const queryUsers = `#graphql
 query users ($skip: Int, $limit: Int) {

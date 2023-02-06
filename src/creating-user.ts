@@ -45,8 +45,7 @@ function isThereANumber(str: string) {
 
 function isThereALetter(str: string) {
   const regex = /[a-z]/;
-  const low = str.toLowerCase();
-  return regex.test(low);
+  return regex.test(str);
 }
 
 function isBirthDateValid(date: string) {
