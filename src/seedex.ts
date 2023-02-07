@@ -2,14 +2,8 @@ import { User } from './entity/User';
 import { AppDataSource } from './data-source';
 import crypto from 'node:crypto';
 import { promisify } from 'node:util';
-import { setupDatabase } from './database';
-import * as dotenv from 'dotenv';
 
-seed('/test.env');
-
-export async function seed(dir) {
-  dotenv.config({ path: process.cwd() + dir });
-  await setupDatabase();
+export async function seedUser(n: number) {
   const alf = [
     'a',
     'b',
@@ -40,7 +34,7 @@ export async function seed(dir) {
   ];
   const num = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
   let random = 0;
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < n; i++) {
     const user = { name: '', email: '', birthDate: '', password: '' };
     for (let j = 0; j < 5; j++) {
       random = float2int(Math.random() * 26);
@@ -69,11 +63,22 @@ export async function seed(dir) {
     console.log('Saved a new user with id: ' + userEnt.id);
   }
 }
+
 function formatDate(date) {
-  const d = date.getUTCDate().toString(); // getUTCDate() returns 1 - 31
-  const m = (date.getUTCMonth() + 1).toString(); // getUTCMonth() returns 0 - 11
+  let d = date.getUTCDate().toString(); // getUTCDate() returns 1 - 31
+  let m = (date.getUTCMonth() + 1).toString(); // getUTCMonth() returns 0 - 11
   const y = date.getUTCFullYear().toString(); // getUTCFullYear() returns a 4-digit year
-  return d.padStart(2, '0') + '/' + m.padStart(2, '0') + '/' + y; // concatenate for output
+  let formatted = '';
+  if (d.length === 1) {
+    // pad to two digits if needed
+    d = '0' + d;
+  }
+  if (m.length === 1) {
+    // pad to two digits if needed
+    m = '0' + m;
+  }
+  formatted = d + '/' + m + '/' + y; // concatenate for output
+  return formatted;
 }
 
 function float2int(value: number) {
