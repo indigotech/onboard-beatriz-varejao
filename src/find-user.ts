@@ -5,7 +5,14 @@ import { CustomError } from './custom-errror';
 const repository = AppDataSource.getRepository(User);
 
 export async function findUser(email: string): Promise<User> {
-  const user = await repository.findOneBy({ email });
+  const user = await repository.findOne({
+    where: {
+      email,
+    },
+    relations: {
+      adress: true,
+    },
+  });
   if (!user) {
     throw new CustomError('Usuário não encontrado', 404);
   }
@@ -30,6 +37,13 @@ export async function findUserById(id: number): Promise<User> {
   }
   return idUser;
 }
+
 export async function listUsers(skip: number, limit: number) {
-  return await repository.createQueryBuilder('user').skip(skip).take(limit).orderBy('user.name').getMany();
+  return await repository
+    .createQueryBuilder('user')
+    .leftJoinAndSelect('user.address', 'address')
+    .skip(skip)
+    .take(limit)
+    .orderBy('user.name')
+    .getMany();
 }

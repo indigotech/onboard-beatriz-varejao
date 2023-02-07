@@ -29,13 +29,8 @@ export const resolvers = {
       adressData.StreetNumber = adress.StreetNumber;
       adressData.user = user;
       await AppDataSource.manager.save(adressData);
-      console.log(user.adress);
-      if (user.adress == undefined) {
-        console.log('ok');
-        user.adress = [adressData];
-        console.log('aft', user.adress);
-      } else user.adress.concat([adressData]);
-      console.log('Saved a new adress' + adressData.id);
+      user.adress.concat([adressData]);
+      console.log('Saved a new adress with id: ' + adressData.id);
       return adressData;
     },
     login: async (_, args: { data: LogInputUser; rememberMe?: boolean }) => {
@@ -55,7 +50,6 @@ export const resolvers = {
       const token = context.headers.authorization;
       authorize(token);
       const user = await findUserById(id);
-      console.log('user adress', user.adress);
       return user;
     },
     users: async (_, args: { before: number; limit: number }, context) => {
