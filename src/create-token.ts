@@ -7,15 +7,12 @@ export function createToken(id: number, rememberMe?: boolean) {
   return jwt.sign({ userid: id }, JWT_SECRET, { expiresIn: rememberMe ? '7d' : '1d' }, { algorithm: 'RS256' });
 }
 
-export function authorize(token: string, id: number) {
+export function authorize(token: string) {
   try {
-    const decoded = jwt.verify(token, JWT_SECRET, { algorithm: 'RS256' });
-    if (decoded.userid == id) {
-      console.log('Operation authorized');
-      return;
-    }
-    throw new CustomError('Operação não autorizada', 405, 'token inválido');
+    jwt.verify(token, JWT_SECRET, { algorithm: 'RS256' });
+    console.log('Operation authorized');
+    return;
   } catch {
-    throw new CustomError('Operação não autorizada', 405, 'token inválido');
+    throw new CustomError('Operação não autorizada', 401, 'token inválido');
   }
 }

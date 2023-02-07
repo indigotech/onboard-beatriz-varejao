@@ -1,7 +1,7 @@
 import { UserInput } from './UserInput';
 import { creatingUser, hashPassword } from './creating-user';
 import { LogInputUser } from './log-user';
-import { findingUser, findUserById, lastUser } from './find-user';
+import { findUser, findUserById } from './find-user';
 import { CustomError } from './custom-errror';
 import { authorize, createToken } from './create-token';
 
@@ -11,15 +11,14 @@ export const resolvers = {
       const { data } = args;
       const headers = context;
       const token = headers.headers.authorization;
-      const id = await lastUser();
-      authorize(token, id);
+      authorize(token);
       const user = await creatingUser(data);
       return user;
     },
     login: async (_, args: { data: LogInputUser; rememberMe?: boolean }) => {
       const { data, rememberMe } = args;
       const hash = await hashPassword(data.password);
-      const user = await findingUser(data.user);
+      const user = await findUser(data.user);
       if (user.hash === hash) {
         const token = createToken(user.id, rememberMe);
         return { user, token };
@@ -33,13 +32,13 @@ export const resolvers = {
     },
     findUser: async (_, args: { email: string }) => {
       const { email } = args;
-      return await findingUser(email);
+      return await findUser(email);
     },
     user: async (_, args: { id: number }, context) => {
       const { id } = args;
       const headers = context;
       const token = headers.headers.authorization;
-      authorize(token, id);
+      authorize(token);
       const user = await findUserById(id);
       return user;
     },

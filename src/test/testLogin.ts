@@ -47,7 +47,7 @@ describe('Testing Login', () => {
       },
     });
     expect(response.data.data.login.user).to.eql(expectedResponse);
-    expect(authorize(response.data.data.login.token, 1)).to.eql(undefined);
+    expect(authorize(response.data.data.login.token)).to.eql(undefined);
   });
 
   after(async () => {

@@ -15,14 +15,11 @@ export async function creatingUser(data: UserInput) {
   if (!isThereANumber(data.password)) {
     throw new CustomError('A senha deve conter pelo menos 1 número', 400);
   }
-  if (data.birthDate.length !== 10) {
-    throw new CustomError('A data deve estar no formato 00/00/0000', 400);
-  }
   if (isThereALetter(data.birthDate)) {
     throw new CustomError('Data de nascimento inválida', 400);
   }
   if (!isBirthDateValid(data.birthDate)) {
-    throw new CustomError('Data de nascimento inválida', 400);
+    throw new CustomError('Data de nascimento inválida (a data deve estar no formato 00/00/0000)', 400);
   }
   const hasEmail = await isEmailAlreadyUsed(data.email);
   if (hasEmail) {
@@ -53,6 +50,9 @@ function isThereALetter(str: string) {
 }
 
 function isBirthDateValid(date: string) {
+  if (date.length !== 10) {
+    return false;
+  }
   try {
     const formattedDays = date.split('/');
     const epoch = new Date(
