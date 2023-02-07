@@ -45,7 +45,7 @@ query user ($id: ID!) {
 export const userError = [
   {
     message: 'Operação não autorizada',
-    code: 405,
+    code: 401,
     details: 'token inválido',
   },
 ];

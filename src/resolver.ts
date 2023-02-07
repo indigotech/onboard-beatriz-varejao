@@ -23,7 +23,7 @@ export const resolvers = {
         const token = createToken(user.id, rememberMe);
         return { user, token };
       }
-      throw new CustomError('Senha Incorreta', 410);
+      throw new CustomError('Senha Incorreta', 401);
     },
   },
   Query: {
