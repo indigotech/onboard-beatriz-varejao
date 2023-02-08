@@ -3,9 +3,9 @@ import { creatingUser, hashPassword } from './creating-user';
 import { findUser, findUserById, listUsers, countUsers } from './find-user';
 import { CustomError } from './custom-errror';
 import { authorize, createToken } from './create-token';
-import { AdressInput } from './Adress';
+import { AddressInput } from './address';
 import { AppDataSource } from './data-source';
-import { Adress } from './entity/Adress';
+import { Address } from './entity/Address';
 
 export const resolvers = {
   Mutation: {
@@ -16,20 +16,20 @@ export const resolvers = {
       const user = await creatingUser(data);
       return user;
     },
-    createAdress: async (_, args: { adress: AdressInput; username: string }) => {
+    createAddress: async (_, args: { adress: AddressInput; username: string }) => {
       const { adress, username } = args;
       const user = await findUser(username);
-      const adressData = new Adress();
+      const adressData = new Address();
       adressData.CEP = adress.CEP;
-      adressData.Complement = adress.Complement;
-      adressData.City = adress.City;
-      adressData.Neighborhood = adress.Neighborhood;
-      adressData.State = adress.State;
-      adressData.Street = adress.Street;
-      adressData.StreetNumber = adress.StreetNumber;
+      adressData.complement = adress.complement;
+      adressData.city = adress.city;
+      adressData.neighborhood = adress.neighborhood;
+      adressData.state = adress.state;
+      adressData.street = adress.street;
+      adressData.streetNumber = adress.streetNumber;
       adressData.user = user;
       await AppDataSource.manager.save(adressData);
-      user.adress.concat([adressData]);
+      user.address.concat([adressData]);
       console.log('Saved a new adress with id: ' + adressData.id);
       return adressData;
     },

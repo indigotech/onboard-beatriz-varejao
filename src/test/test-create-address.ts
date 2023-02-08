@@ -1,10 +1,14 @@
 import { expect } from 'chai';
-import { queryUsers, queryBase } from './input';
+import {
+  queryUser,
+  createdUser,
+  mutAddress,
+  responseAddress1,
+  responseAddress2,
+  expectedUser,
+  expectedResponseUser,
+} from './input';
 import { createToken } from '../create-token';
-import { countUsers } from '../find-user';
-import { seedUser } from '../seed/seed-user';
-import { AppDataSource } from '../data-source';
-import { User } from '../entity/User';
 
 describe('Testing createAdress', () => {
   it('should create an adress and return it', async () => {
@@ -30,38 +34,38 @@ describe('Testing createAdress', () => {
       },
     );
     const response2 = await axios.post(url, {
-      query: mutAdress,
+      query: mutAddress,
       variables: {
-        adress: {
+        address: {
           CEP: '09030-010',
-          Street: 'rua X',
-          StreetNumber: '121',
-          Complement: 'ap22',
-          Neighborhood: 'bairro a',
-          City: 'cidade das esmeraldas',
-          State: 'ww',
+          street: 'rua X',
+          streetNumber: '121',
+          complement: 'ap22',
+          neighborhood: 'bairro a',
+          city: 'cidade das esmeraldas',
+          state: 'ww',
         },
         email: 'eu@gmail.com',
       },
     });
-    expect(response2.data.data.createAdress).to.be.eql(responseAdress1);
+    expect(response2.data.data.createAdress).to.be.eql(responseAddress1);
 
     const response3 = await axios.post(url, {
-      query: mutAdress,
+      query: mutAddress,
       variables: {
         adress: {
           CEP: '04119-903',
-          Street: 'rua W',
-          StreetNumber: '33',
-          Complement: 'ap11',
-          Neighborhood: 'bairro b',
-          City: 'cidade dos jasmins',
-          State: 'xx',
+          street: 'rua W',
+          streetNumber: '33',
+          complement: 'ap11',
+          neighborhood: 'bairro b',
+          city: 'cidade dos jasmins',
+          state: 'xx',
         },
         email: 'eu@gmail.com',
       },
     });
-    expect(response3.data.data.createAdress).to.be.eql(responseAdress2);
+    expect(response3.data.data.createAdress).to.be.eql(responseAddress2);
   });
 
   it('testing the query user', async () => {

@@ -69,12 +69,12 @@ export async function queryBase(query: string, variables, token: string) {
 export const responseAdress1 = {
   id: '1',
   CEP: '09030-010',
-  Street: 'rua X',
-  StreetNumber: '121',
-  Complement: 'ap22',
-  Neighborhood: 'bairro a',
-  City: 'cidade das esmeraldas',
-  State: 'ww',
+  street: 'rua X',
+  streetNumber: '121',
+  complement: 'ap22',
+  neighborhood: 'bairro a',
+  city: 'cidade das esmeraldas',
+  state: 'ww',
   user: {
     birthDate: '27/12/1900',
     email: 'eu@gmail.com',
@@ -83,15 +83,15 @@ export const responseAdress1 = {
   },
 };
 
-export const responseAdress2 = {
+export const responseAddress2 = {
   id: '2',
   CEP: '04119-903',
-  Street: 'rua W',
-  StreetNumber: '33',
-  Complement: 'ap11',
-  Neighborhood: 'bairro b',
-  City: 'cidade dos jasmins',
-  State: 'xx',
+  street: 'rua W',
+  streetNumber: '33',
+  complement: 'ap11',
+  neighborhood: 'bairro b',
+  city: 'cidade dos jasmins',
+  state: 'xx',
   user: {
     birthDate: '27/12/1900',
     email: 'eu@gmail.com',

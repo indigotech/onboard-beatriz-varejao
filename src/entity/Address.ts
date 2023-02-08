@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { User } from './User';
 
 @Entity()
-export class Adress {
+export class Address {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -10,23 +10,23 @@ export class Adress {
   CEP: string;
 
   @Column()
-  Street: string;
+  street: string;
 
   @Column()
-  StreetNumber: string;
+  streetNumber: string;
 
   @Column()
-  Complement: string;
+  complement: string;
 
   @Column()
-  Neighborhood: string;
+  neighborhood: string;
 
   @Column()
-  City: string;
+  city: string;
 
   @Column()
-  State: string;
+  state: string;
 
-  @ManyToOne(() => User, (user) => user.adress, { cascade: true, onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.address, { cascade: true, onDelete: 'CASCADE' })
   user: User;
 }

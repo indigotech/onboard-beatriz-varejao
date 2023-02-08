@@ -10,7 +10,7 @@ export async function findUser(email: string): Promise<User> {
       email,
     },
     relations: {
-      adress: true,
+      address: true,
     },
   });
   if (!user) {
@@ -29,7 +29,7 @@ export async function findUserById(id: number): Promise<User> {
       id,
     },
     relations: {
-      adress: true,
+      address: true,
     },
   });
   if (!idUser) {
