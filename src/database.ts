@@ -1,4 +1,3 @@
-import { User } from './entity/User';
 import { AppDataSource } from './data-source';
 
 export async function setupDatabase() {
