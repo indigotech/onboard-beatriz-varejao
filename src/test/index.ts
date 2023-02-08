@@ -7,4 +7,14 @@ before(async () => {
   await setupDatabase();
   await setupServer();
 });
-require('./testLogin');
+require('./test-hello-world');
+require('./test-create-user');
+require('./test-login');
+require('./test-query-user');
+
+afterEach(async () => {
+  await clearDatabase();
+});
+after(async () => {
+  await dropDatabase();
+});

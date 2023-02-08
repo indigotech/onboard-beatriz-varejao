@@ -12,6 +12,6 @@ export const dropDatabase = async () => {
 };
 
 export const clearDatabase = async () => {
-  await AppDataSource.getRepository(User).clear();
+  await AppDataSource.query('TRUNCATE TABLE "user" CASCADE;');
   console.info(`Database Cleared!`);
 };

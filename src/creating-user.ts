@@ -1,4 +1,4 @@
-import { UserInput } from './UserInput';
+import { UserInput } from './user-input';
 import { User } from './entity/User';
 import { AppDataSource } from './data-source';
 import { CustomError } from './custom-errror';

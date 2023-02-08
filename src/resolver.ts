@@ -1,4 +1,4 @@
-import { UserInput } from './UserInput';
+import { UserInput } from './user-input';
 import { creatingUser, hashPassword } from './creating-user';
 import { LogInputUser } from './log-user';
 import { findUser, findUserById } from './find-user';

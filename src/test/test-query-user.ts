@@ -1,18 +1,9 @@
-import { setupServer } from '../server';
-import { dropDatabase, setupDatabase, clearDatabase } from '../database';
-import * as dotenv from 'dotenv';
 import axios from 'axios';
 import { expect } from 'chai';
 import { queryUser, expectedResponseUser, userError, userErrorNotFound, createdUser } from './input';
 import { createToken } from '../create-token';
 
 describe('Testing Query User', () => {
-  before(async () => {
-    dotenv.config({ path: process.cwd() + '/test.env' });
-    await setupDatabase();
-    await setupServer();
-  });
-
   it('should fetch the infos of the first user', async () => {
     const url = 'http://localhost:4000';
     const token = createToken(1, true);
@@ -37,7 +28,7 @@ describe('Testing Query User', () => {
     );
     const response = await axios.post(
       url,
-      { query: queryUser, variables: { id: 1 } },
+      { query: queryUser, variables: { id: 4 } },
       {
         headers: {
           authorization: token,
@@ -64,10 +55,11 @@ describe('Testing Query User', () => {
 
   it('should return error token invalid', async () => {
     const url = 'http://localhost:4000';
-    const token = createToken(1, true);
+    const token =
+      'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiIxIiwiaWF0IjoxNTE2MjM5MDIyfQ.p8mZm6I0CXfkRfoEQkGi34zfHKiBZ8ypQ4q5N3vJOL4NOME0feb8MhNg1JeKNnN1OTWuV_ngmnKmd710eiEYovUYw5butqzAvYIVJJtmrn7egiuWRIVbposZv9OZxr9z6tx3rDdNOky7O8zZoI_GAQijEiY62t2XL0xCCtWzfR33MMc__NUU9_1owXHFgrakPqMhuTmCAasBUWPZjDZLvFRY3-kJjY3Pd9iicGCG_m9uE5mO5iYY84OLT15ARANs5GYGx3u5vQnAHf7mqUiCvfo6WLN6_XhOjtAs-CFWmCKwmH239iwQSpMvuvFlvPa_SSJl9Vr79Pp1D16QjFfgYQ';
     const response = await axios.post(
       url,
-      { query: queryUser, variables: { id: 1 } },
+      { query: queryUser, variables: { id: 4 } },
       {
         headers: {
           authorization: token,
@@ -75,13 +67,5 @@ describe('Testing Query User', () => {
       },
     );
     expect(response.data.errors).to.eql(userError);
-  });
-
-  afterEach(async () => {
-    await clearDatabase();
-  });
-
-  after(async () => {
-    await dropDatabase();
   });
 });

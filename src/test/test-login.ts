@@ -1,7 +1,6 @@
-import { dropDatabase, clearDatabase } from '../database';
 import axios from 'axios';
 import { expect } from 'chai';
-import { expectedResponse, mutlogin, createdUser } from './input';
+import { mutlogin, createdUser, expectedResponseLog } from './input';
 import { authorize, createToken } from '../create-token';
 import { lastUser } from '../find-user';
 
@@ -38,12 +37,7 @@ describe('Testing Login', () => {
         },
       },
     });
-    expect(response.data.data.login.user).to.eql(expectedResponse);
+    expect(response.data.data.login.user).to.eql(expectedResponseLog);
     expect(authorize(response.data.data.login.token)).to.eql(undefined);
-  });
-
-  after(async () => {
-    await clearDatabase();
-    await dropDatabase();
   });
 });

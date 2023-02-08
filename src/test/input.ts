@@ -60,8 +60,10 @@ export const userDatabase = {
 
 export const expectedResponse = { birthDate: '27/12/1900', email: 'eu@gmail.com', id: '1', name: 'eu' };
 
+export const expectedResponseLog = { birthDate: '27/12/1900', email: 'eu@gmail.com', id: '3', name: 'eu' };
+
 export const expectedResponseUser = {
-  id: '1',
+  id: '4',
   birthDate: '27/12/1900',
   email: 'eu@gmail.com',
   name: 'eu',
