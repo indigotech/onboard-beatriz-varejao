@@ -9,8 +9,7 @@ export const resolvers = {
   Mutation: {
     createUser: async (_, args: { data: UserInput }, context) => {
       const { data } = args;
-      const headers = context;
-      const token = headers.headers.authorization;
+      const token = context.headers.authorization;
       authorize(token);
       const user = await creatingUser(data);
       return user;
@@ -36,8 +35,7 @@ export const resolvers = {
     },
     user: async (_, args: { id: number }, context) => {
       const { id } = args;
-      const headers = context;
-      const token = headers.headers.authorization;
+      const token = context.headers.authorization;
       authorize(token);
       const user = await findUserById(id);
       return user;

@@ -10,7 +10,6 @@ export function createToken(id: number, rememberMe?: boolean) {
 export function authorize(token: string) {
   try {
     jwt.verify(token, JWT_SECRET, { algorithm: 'RS256' });
-    console.log('Operation authorized');
     return;
   } catch {
     throw new CustomError('Operação não autorizada', 401, 'token inválido');

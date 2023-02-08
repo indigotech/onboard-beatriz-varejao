@@ -1,16 +1,15 @@
-import { setupServer } from './server';
+import { User } from './entity/User';
+import { AppDataSource } from './data-source';
+import crypto from 'node:crypto';
+import { promisify } from 'node:util';
 import { setupDatabase } from './database';
-import axios from 'axios';
 import * as dotenv from 'dotenv';
-import { createdUser } from './test/input';
-import { createToken } from './create-token';
 
 seed('/test.env');
 
 async function seed(dir) {
   dotenv.config({ path: process.cwd() + dir });
   await setupDatabase();
-  await setupServer();
   const alf = [
     'a',
     'b',
@@ -59,22 +58,15 @@ async function seed(dir) {
       user.password = user.password + num[random];
     }
     user.email = user.email + '@gmail.com';
-    const url = 'http://localhost:4000';
-    const token = createToken(i, true);
-    await axios.post(
-      url,
-      {
-        query: createdUser,
-        variables: {
-          user: user,
-        },
-      },
-      {
-        headers: {
-          authorization: token,
-        },
-      },
-    );
+    const userEnt = new User();
+    userEnt.name = user.name;
+    const promiseCrypto = promisify(crypto.scrypt);
+    const derivedKey = (await promiseCrypto(user.password, 'salt', 10)) as Buffer;
+    userEnt.hash = derivedKey.toString('hex');
+    userEnt.email = user.email;
+    userEnt.birthDate = user.birthDate;
+    await AppDataSource.manager.save(userEnt);
+    console.log('Saved a new user with id: ' + userEnt.id);
   }
 }
 function formatDate(date) {
