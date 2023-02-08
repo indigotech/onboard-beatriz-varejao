@@ -1,11 +1,13 @@
 import axios from 'axios';
 import { expect } from 'chai';
-import { createdUser, queryUsers, expectedUsersNull } from './input';
+import { queryUsers } from './input';
 import { createToken } from '../create-token';
 import { lastUser } from '../find-user';
+import { seedUser } from '../seedex';
 
 describe('Testing Query Users', () => {
-  it.only('should return the infos of the 2 first users', async () => {
+  it.only('should return the infos of all users', async () => {
+    await seedUser(50);
     const url = 'http://localhost:4000';
     const token = createToken(0, true);
     const total = (await lastUser()) - 1;

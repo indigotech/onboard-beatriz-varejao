@@ -10,7 +10,7 @@ before(async () => {
 require('./test-create-user');
 require('./test-login');
 require('./test-query-user');
-require('./test-list-users');
+require('./test-page');
 
 afterEach(async () => {
   await clearDatabase();
