@@ -1,3 +1,7 @@
+import axios from 'axios';
+import { createToken } from '../create-token';
+import { UserInput } from '../user-input';
+
 export const createdUser = `#graphql
 mutation createUser ($user: UserInput) {
     createUser ( data: $user) {
@@ -29,22 +33,11 @@ query user ($id: ID!) {
       birthDate
       email
       name
-      hash
   }
 }`;
 
-export function expectResponse(id: number, returnHash: boolean) {
+export function expectResponse(id: number) {
   const idd = `${id}`;
-  if (returnHash) {
-    const expectedResponse = {
-      birthDate: '27/12/1900',
-      email: 'eu@gmail.com',
-      hash: '7f658385f4d54cba7ce3',
-      id: idd,
-      name: 'eu',
-    };
-    return expectedResponse;
-  }
   const expectedResponse = {
     birthDate: '27/12/1900',
     email: 'eu@gmail.com',
@@ -53,3 +46,26 @@ export function expectResponse(id: number, returnHash: boolean) {
   };
   return expectedResponse;
 }
+
+const url = 'http://localhost:4000';
+const token = createToken(0, true);
+const input = {
+  name: 'eu',
+  email: 'eu@gmail.com',
+  birthDate: '27/12/1900',
+  password: 'mud',
+};
+const response = await axios.post(
+  url,
+  {
+    query: createdUser,
+    variables: {
+      user: input,
+    },
+  },
+  {
+    headers: {
+      authorization: token,
+    },
+  },
+);

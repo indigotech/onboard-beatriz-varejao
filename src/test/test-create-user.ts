@@ -31,7 +31,7 @@ describe('Testing createUser', () => {
     const user = await findUser('eu@gmail.com');
     expect(user.name).to.be.eq(input.name);
     expect(user.birthDate).to.be.eq(input.birthDate);
-    expect(response.data.data.createUser).to.eql(expectResponse(user.id, false));
+    expect(response.data.data.createUser).to.eql(expectResponse(user.id));
   });
   it('should return error email already logged', async () => {
     const url = 'http://localhost:4000';
