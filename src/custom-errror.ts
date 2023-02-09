@@ -26,5 +26,5 @@ export function formatError(formattedError: GraphQLFormattedError, error: unknow
       details: originalError.details,
     };
   }
-  return { message: 'Erro interno', code: 499, details: (error as Error).message };
+  return { message: 'Erro interno', code: 500, details: (error as Error).message };
 }

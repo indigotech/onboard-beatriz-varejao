@@ -1,6 +1,5 @@
-import { UserInput } from './user-input';
+import { UserInput, LogInputUser } from './user-input';
 import { creatingUser, hashPassword } from './creating-user';
-import { LogInputUser } from './log-user';
 import { findUser, findUserById } from './find-user';
 import { CustomError } from './custom-errror';
 import { authorize, createToken } from './create-token';
@@ -28,10 +27,6 @@ export const resolvers = {
   Query: {
     hello: () => {
       return 'Hello world!';
-    },
-    findUser: async (_, args: { email: string }) => {
-      const { email } = args;
-      return await findUser(email);
     },
     user: async (_, args: { id: number }, context) => {
       const { id } = args;

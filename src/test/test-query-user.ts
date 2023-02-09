@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { expect } from 'chai';
-import { queryUser, expectedResponseUser, userError, userErrorNotFound, createdUser } from './input';
+import { queryUser, createdUser, expectResponse } from './input';
 import { createToken } from '../create-token';
+import { findUser } from '../find-user';
 
 describe('Testing Query User', () => {
   it('should fetch the infos of the first user', async () => {
@@ -26,16 +27,17 @@ describe('Testing Query User', () => {
         },
       },
     );
+    const user = await findUser('eu@gmail.com');
     const response = await axios.post(
       url,
-      { query: queryUser, variables: { id: 4 } },
+      { query: queryUser, variables: { id: user.id } },
       {
         headers: {
           authorization: token,
         },
       },
     );
-    expect(response.data.data.user).to.eql(expectedResponseUser);
+    expect(response.data.data.user).to.eql(expectResponse(user.id, true));
   });
 
   it('should return error User not found', async () => {
@@ -50,6 +52,7 @@ describe('Testing Query User', () => {
         },
       },
     );
+    const userErrorNotFound = [{ message: 'Usuário não encontrado', code: 404 }];
     expect(response.data.errors).to.eql(userErrorNotFound);
   });
 
@@ -66,6 +69,13 @@ describe('Testing Query User', () => {
         },
       },
     );
+    const userError = [
+      {
+        message: 'Operação não autorizada',
+        code: 401,
+        details: 'token inválido',
+      },
+    ];
     expect(response.data.errors).to.eql(userError);
   });
 });

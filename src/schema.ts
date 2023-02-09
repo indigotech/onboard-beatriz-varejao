@@ -26,7 +26,6 @@ export const typeDefs = `#graphql
   }
   type Query {
     hello: String
-    findUser (email: String): User
     user (id: ID!): User
   }
 `;

@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { expect } from 'chai';
-import { mutlogin, createdUser, expectedResponseLog } from './input';
+import { mutlogin, createdUser, expectResponse } from './input';
 import { authorize, createToken } from '../create-token';
-import { lastUser } from '../find-user';
+import { lastUser, findUser } from '../find-user';
 
 describe('Testing Login', () => {
   it('should return a login user', async () => {
@@ -37,7 +37,8 @@ describe('Testing Login', () => {
         },
       },
     });
-    expect(response.data.data.login.user).to.eql(expectedResponseLog);
+    const response2 = await findUser('eu@gmail.com');
+    expect(response.data.data.login.user).to.eql(expectResponse(response2.id, false));
     expect(authorize(response.data.data.login.token)).to.eql(undefined);
   });
 });
