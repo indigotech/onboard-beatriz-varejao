@@ -25,9 +25,6 @@ export const resolvers = {
     },
   },
   Query: {
-    hello: () => {
-      return 'Hello world!';
-    },
     user: async (_, args: { id: number }, context) => {
       const { id } = args;
       const token = context.headers.authorization;

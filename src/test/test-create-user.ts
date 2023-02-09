@@ -1,12 +1,12 @@
-import axios from 'axios';
 import { expect } from 'chai';
-import { createdUser, expectResponse } from './input';
+import { createdUser, createRepUser, queryBase } from './input';
 import { createToken } from '../create-token';
 import { findUser } from '../find-user';
+import crypto from 'node:crypto';
+import { promisify } from 'node:util';
 
 describe('Testing createUser', () => {
   it('should create an user and return it', async () => {
-    const url = 'http://localhost:4000';
     const token = createToken(0, true);
     const input = {
       name: 'eu',
@@ -14,27 +14,24 @@ describe('Testing createUser', () => {
       birthDate: '27/12/1900',
       password: 'mudar123',
     };
-    const response = await axios.post(
-      url,
-      {
-        query: createdUser,
-        variables: {
-          user: input,
-        },
-      },
-      {
-        headers: {
-          authorization: token,
-        },
-      },
-    );
-    const user = await findUser('eu@gmail.com');
+    const response = await queryBase(createdUser, input, token);
+    const user = await findUser(input.email);
     expect(user.name).to.be.eq(input.name);
     expect(user.birthDate).to.be.eq(input.birthDate);
-    expect(response.data.data.createUser).to.eql(expectResponse(user.id));
+    const promiseCrypto = promisify(crypto.scrypt);
+    const derivedKey = (await promiseCrypto(input.password, 'salt', 10)) as Buffer;
+    const hash = derivedKey.toString('hex');
+    expect(user.hash).to.be.eq(hash);
+    const id = `${user.id}`;
+    expect(response.data.data.createUser).to.be.deep.eq({
+      birthDate: user.birthDate,
+      email: user.email,
+      id,
+      name: input.name,
+    });
   });
+
   it('should return error email already logged', async () => {
-    const url = 'http://localhost:4000';
     const token = createToken(0, true);
     const input = {
       name: 'eu',
@@ -42,42 +39,15 @@ describe('Testing createUser', () => {
       birthDate: '27/12/1900',
       password: 'mudar123',
     };
-    await axios.post(
-      url,
-      {
-        query: createdUser,
-        variables: {
-          user: input,
-        },
-      },
-      {
-        headers: {
-          authorization: token,
-        },
-      },
-    );
-    const response = await axios.post(
-      url,
-      {
-        query: createdUser,
-        variables: {
-          user: input,
-        },
-      },
-      {
-        headers: {
-          authorization: token,
-        },
-      },
-    );
-    const error = {
+    await createRepUser(input);
+    const response = await queryBase(createdUser, input, token);
+    expect(response.data).to.be.eql({
       errors: [{ message: 'Email já utilizado', code: 400 }],
       data: { createUser: null },
-    };
-    expect(response.data).to.be.eql(error);
+    });
   });
+
   it('should return error unsafe password', async () => {
-    const url = 'http://localhost:4000';
     const token = createToken(0, true);
     const input = {
       name: 'eu',
@@ -85,21 +55,8 @@ describe('Testing createUser', () => {
       birthDate: '27/12/1900',
       password: 'mud',
     };
-    const response = await axios.post(
-      url,
-      {
-        query: createdUser,
-        variables: {
-          user: input,
-        },
-      },
-      {
-        headers: {
-          authorization: token,
-        },
-      },
-    );
-    const error = {
+    const response = await queryBase(createdUser, input, token);
+    expect(response.data).to.be.eql({
       errors: [
         {
           message: 'A senha deve conter pelo menos 6 caracteres',
@@ -107,11 +64,10 @@ describe('Testing createUser', () => {
         },
       ],
       data: { createUser: null },
-    };
-    expect(response.data).to.be.eql(error);
+    });
   });
+
   it('should return error unvalid birthDate', async () => {
-    const url = 'http://localhost:4000';
     const token = createToken(0, true);
     const input = {
       name: 'eu',
@@ -119,24 +75,10 @@ describe('Testing createUser', () => {
       birthDate: 'BBB',
       password: 'mudar123',
     };
-    const response = await axios.post(
-      url,
-      {
-        query: createdUser,
-        variables: {
-          user: input,
-        },
-      },
-      {
-        headers: {
-          authorization: token,
-        },
-      },
-    );
-    const error = {
+    const response = await queryBase(createdUser, input, token);
+    expect(response.data).to.be.eql({
       errors: [{ message: 'Data de nascimento inválida', code: 400 }],
       data: { createUser: null },
-    };
-    expect(response.data).to.be.eql(error);
+    });
   });
 });

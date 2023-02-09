@@ -1,44 +1,62 @@
-import axios from 'axios';
 import { expect } from 'chai';
-import { mutlogin, createdUser, expectResponse } from './input';
-import { authorize, createToken } from '../create-token';
-import { lastUser, findUser } from '../find-user';
+import { mutlogin, createRepUser, queryBaseLog } from './input';
+import { authorize } from '../create-token';
+import { findUser } from '../find-user';
+import { LogInputUser } from 'user-input';
 
 describe('Testing Login', () => {
   it('should return a login user', async () => {
-    const url = 'http://localhost:4000';
-    const id = await lastUser();
-    const token = createToken(id, true);
-    await axios.post(
-      url,
-      {
-        query: createdUser,
-        variables: {
-          user: {
-            name: 'eu',
-            email: 'eu@gmail.com',
-            birthDate: '27/12/1900',
-            password: 'mudar123',
-          },
-        },
-      },
-      {
-        headers: {
-          authorization: token,
-        },
-      },
-    );
-    const response = await axios.post(url, {
-      query: mutlogin,
-      variables: {
-        user: {
-          user: 'eu@gmail.com',
-          password: 'mudar123',
-        },
-      },
+    const input = {
+      name: 'eu',
+      email: 'eu@gmail.com',
+      birthDate: '27/12/1900',
+      password: 'mudar123',
+    };
+    const inputLog: LogInputUser = {
+      user: input.email,
+      password: input.password,
+    };
+    await createRepUser(input);
+    const response = await queryBaseLog(mutlogin, inputLog);
+    const user = await findUser(input.email);
+    const id = `${user.id}`;
+    expect(response.data.data.login.user).to.be.deep.eq({
+      birthDate: user.birthDate,
+      email: user.email,
+      id,
+      name: input.name,
     });
-    const response2 = await findUser('eu@gmail.com');
-    expect(response.data.data.login.user).to.eql(expectResponse(response2.id, false));
     expect(authorize(response.data.data.login.token)).to.eql(undefined);
+  });
+
+  it('should return a password incorrect', async () => {
+    const input = {
+      name: 'eu',
+      email: 'eu@gmail.com',
+      birthDate: '27/12/1900',
+      password: 'mudar123',
+    };
+    const inputLog: LogInputUser = {
+      user: input.email,
+      password: 'mud',
+    };
+    await createRepUser(input);
+    const response = await queryBaseLog(mutlogin, inputLog);
+    expect(response.data).to.be.eql({
+      errors: [{ message: 'Senha Incorreta', code: 401 }],
+      data: { login: null },
+    });
+  });
+
+  it('should return user not found', async () => {
+    const inputLog: LogInputUser = {
+      user: 'eu@gmail.com',
+      password: 'mud',
+    };
+    const response = await queryBaseLog(mutlogin, inputLog);
+    expect(response.data).to.be.eql({
+      errors: [{ message: 'Usuário não encontrado', code: 404 }],
+      data: { login: null },
+    });
   });
 });

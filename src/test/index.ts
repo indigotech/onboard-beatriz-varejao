@@ -7,7 +7,6 @@ before(async () => {
   await setupDatabase();
   await setupServer();
 });
-require('./test-hello-world');
 require('./test-create-user');
 require('./test-login');
 require('./test-query-user');

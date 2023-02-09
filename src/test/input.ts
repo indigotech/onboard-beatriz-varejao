@@ -1,6 +1,9 @@
 import axios from 'axios';
-import { createToken } from '../create-token';
-import { UserInput } from '../user-input';
+import { UserInput, LogInputUser } from '../user-input';
+import { User } from '../entity/User';
+import crypto from 'node:crypto';
+import { promisify } from 'node:util';
+import { AppDataSource } from '../data-source';
 
 export const createdUser = `#graphql
 mutation createUser ($user: UserInput) {
@@ -47,25 +50,58 @@ export function expectResponse(id: number) {
   return expectedResponse;
 }
 
-const url = 'http://localhost:4000';
-const token = createToken(0, true);
-const input = {
-  name: 'eu',
-  email: 'eu@gmail.com',
-  birthDate: '27/12/1900',
-  password: 'mud',
-};
-const response = await axios.post(
-  url,
-  {
-    query: createdUser,
+export async function queryBase(query: string, input: UserInput, token: string) {
+  const url = 'http://localhost:4000';
+  const response = await axios.post(
+    url,
+    {
+      query,
+      variables: {
+        user: input,
+      },
+    },
+    {
+      headers: {
+        authorization: token,
+      },
+    },
+  );
+  return response;
+}
+
+export async function queryBaseUser(query: string, id: number, token: string) {
+  const url = 'http://localhost:4000';
+  const response = await axios.post(
+    url,
+    { query, variables: { id } },
+    {
+      headers: {
+        authorization: token,
+      },
+    },
+  );
+  return response;
+}
+
+export async function queryBaseLog(query: string, input: LogInputUser) {
+  const url = 'http://localhost:4000';
+  const response = await axios.post(url, {
+    query,
     variables: {
       user: input,
     },
-  },
-  {
-    headers: {
-      authorization: token,
-    },
-  },
-);
+  });
+  return response;
+}
+
+export async function createRepUser(input: UserInput) {
+  const user = new User();
+  user.name = input.name;
+  const promiseCrypto = promisify(crypto.scrypt);
+  const derivedKey = (await promiseCrypto(input.password, 'salt', 10)) as Buffer;
+  user.hash = derivedKey.toString('hex');
+  user.email = input.email;
+  user.birthDate = input.birthDate;
+  await AppDataSource.manager.save(user);
+  console.log('Saved a new user with id: ' + user.id);
+}

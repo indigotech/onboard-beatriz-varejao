@@ -25,7 +25,6 @@ export const typeDefs = `#graphql
   login (data: LogInputUser, rememberMe: Boolean): LogUser
   }
   type Query {
-    hello: String
     user (id: ID!): User
   }
 `;
