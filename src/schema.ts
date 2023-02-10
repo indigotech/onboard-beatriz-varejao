@@ -26,6 +26,6 @@ export const typeDefs = `#graphql
   }
   type Query {
     user (id: ID!): User
-    users (userToReturn: Int): [User]
+    users (limit: Int): [User]
   }
 `;

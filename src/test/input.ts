@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { UserInput, LogInputUser } from '../user-input';
+import { UserInput } from '../user-input';
 import { User } from '../entity/User';
 import crypto from 'node:crypto';
 import { promisify } from 'node:util';
@@ -38,55 +38,14 @@ query user ($id: ID!) {
   }
 }`;
 
-export async function queryBase(query: string, input: UserInput, token: string) {
+export async function queryBase(query: string, variables, token: string) {
   const url = 'http://localhost:4000';
   const response = await axios.post(
     url,
     {
       query,
-      variables: {
-        user: input,
-      },
+      variables,
     },
-    {
-      headers: {
-        authorization: token,
-      },
-    },
-  );
-  return response;
-}
-
-export async function queryBaseUser(query: string, id: number, token: string) {
-  const url = 'http://localhost:4000';
-  const response = await axios.post(
-    url,
-    { query, variables: { id } },
-    {
-      headers: {
-        authorization: token,
-      },
-    },
-  );
-  return response;
-}
-
-export async function queryBaseLogin(query: string, input: LogInputUser) {
-  const url = 'http://localhost:4000';
-  const response = await axios.post(url, {
-    query,
-    variables: {
-      user: input,
-    },
-  });
-  return response;
-}
-
-export async function queryBaseUsersList(query: string, limit: number, token: string) {
-  const url = 'http://localhost:4000';
-  const response = await axios.post(
-    url,
-    { query, variables: { limit } },
     {
       headers: {
         authorization: token,
@@ -110,7 +69,7 @@ export async function createRepositoryUser(input: UserInput) {
 
 export const queryUsers = `#graphql
 query users ($limit: Int) {
-    users ( userToReturn: $limit) {
+    users ( limit: $limit) {
       birthDate
       email
       id

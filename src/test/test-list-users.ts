@@ -1,7 +1,9 @@
 import { expect } from 'chai';
-import { createRepositoryUser, queryBaseUsersList, queryUsers } from './input';
+import { createRepositoryUser, queryBase, queryUsers } from './input';
 import { createToken } from '../create-token';
 import { findUser } from '../find-user';
+import { User } from '../entity/User';
+import { AppDataSource } from '../data-source';
 
 describe('Testing Query Users', () => {
   it('should return the infos of the 2 first users', async () => {
@@ -20,25 +22,17 @@ describe('Testing Query Users', () => {
     await createRepositoryUser(input);
     await createRepositoryUser(input2);
     const token = createToken(0, true);
-    const response = await queryBaseUsersList(queryUsers, 2, token);
-    const user = await findUser(input2.email);
-    const id = `${user.id}`;
-    const user2 = await findUser(input.email);
-    const id2 = `${user2.id}`;
-    expect(response.data.data.users).to.be.deep.eq([
-      {
-        birthDate: user.birthDate,
+    const variables = { limit: 2 };
+    const response = await queryBase(queryUsers, variables, token);
+    const users = await AppDataSource.getRepository(User).find({ order: { name: 'ASC' } });
+    expect(response.data.data.users).to.be.deep.eq(
+      users.map((user) => ({
+        id: `${user.id}`,
         email: user.email,
-        id,
         name: user.name,
-      },
-      {
-        birthDate: user2.birthDate,
-        email: user2.email,
-        id: id2,
-        name: user2.name,
-      },
-    ]);
+        birthDate: user.birthDate,
+      })),
+    );
   });
 
   it('should return the infos of the 2 users in the database', async () => {
@@ -57,25 +51,17 @@ describe('Testing Query Users', () => {
     await createRepositoryUser(input);
     await createRepositoryUser(input2);
     const token = createToken(0, true);
-    const response = await queryBaseUsersList(queryUsers, 3, token);
-    const user = await findUser(input2.email);
-    const id = `${user.id}`;
-    const user2 = await findUser(input.email);
-    const id2 = `${user2.id}`;
-    expect(response.data.data.users).to.be.deep.eq([
-      {
-        birthDate: user.birthDate,
+    const variables = { limit: 3 };
+    const response = await queryBase(queryUsers, variables, token);
+    const users = await AppDataSource.getRepository(User).find({ order: { name: 'ASC' } });
+    expect(response.data.data.users).to.be.deep.eq(
+      users.map((user) => ({
+        id: `${user.id}`,
         email: user.email,
-        id,
         name: user.name,
-      },
-      {
-        birthDate: user2.birthDate,
-        email: user2.email,
-        id: id2,
-        name: user2.name,
-      },
-    ]);
+        birthDate: user.birthDate,
+      })),
+    );
   });
 
   it('should return the infos of all the users in the database', async () => {
@@ -87,14 +73,14 @@ describe('Testing Query Users', () => {
     };
     await createRepositoryUser(input);
     const token = createToken(0, true);
-    const response = await queryBaseUsersList(queryUsers, undefined, token);
+    const variables = { limit: undefined };
+    const response = await queryBase(queryUsers, variables, token);
     const user = await findUser(input.email);
-    const id = `${user.id}`;
     expect(response.data.data.users).to.be.deep.eq([
       {
         birthDate: user.birthDate,
         email: user.email,
-        id: id,
+        id: `${user.id}`,
         name: user.name,
       },
     ]);
