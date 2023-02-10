@@ -1,7 +1,4 @@
 export const typeDefs = `#graphql
-  type Query {
-    hello: String
-  }
   input UserInput {
      name: String!
      email: String!
@@ -15,10 +12,19 @@ export const typeDefs = `#graphql
     birthDate: String!
     hash: String!
   }
+  type LogUser {
+    user: User!
+    token: String!
+  }
+  input LogInputUser {
+    user: String!
+    password: String!
+  }
   type Mutation {
   createUser (data: UserInput): User
+  login (data: LogInputUser, rememberMe: Boolean): LogUser
   }
   type Query {
-    findUser (id: ID!): User
+    user (id: ID!): User
   }
 `;

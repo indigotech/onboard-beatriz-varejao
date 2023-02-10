@@ -1,3 +1,6 @@
+import { GraphQLError, GraphQLFormattedError } from 'graphql';
+import { unwrapResolverError } from '@apollo/server/errors';
+
 export class CustomError extends Error {
   code: number;
   details?: string;
@@ -7,4 +10,21 @@ export class CustomError extends Error {
     this.code = code;
     this.details = details;
   }
+}
+
+export function formatError(formattedError: GraphQLFormattedError, error: unknown) {
+  let originalError = error;
+
+  if (error instanceof GraphQLError) {
+    originalError = unwrapResolverError(error);
+  }
+
+  if (originalError instanceof CustomError) {
+    return {
+      message: originalError.message,
+      code: originalError.code,
+      details: originalError.details,
+    };
+  }
+  return { message: 'Erro interno', code: 500, details: (error as Error).message };
 }

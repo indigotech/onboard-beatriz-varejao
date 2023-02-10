@@ -1,4 +1,4 @@
-import { UserInput } from './UserInput';
+import { UserInput } from './user-input';
 import { User } from './entity/User';
 import { AppDataSource } from './data-source';
 import { CustomError } from './custom-errror';
@@ -14,6 +14,12 @@ export async function creatingUser(data: UserInput) {
   }
   if (!isThereANumber(data.password)) {
     throw new CustomError('A senha deve conter pelo menos 1 número', 400);
+  }
+  if (isThereALetter(data.birthDate)) {
+    throw new CustomError('Data de nascimento inválida', 400);
+  }
+  if (!isBirthDateValid(data.birthDate)) {
+    throw new CustomError('Data de nascimento inválida (a data deve estar no formato 00/00/0000)', 400);
   }
   const hasEmail = await isEmailAlreadyUsed(data.email);
   if (hasEmail) {
@@ -38,41 +44,27 @@ function isThereANumber(str: string) {
 }
 
 function isThereALetter(str: string) {
-  const alf = [
-    'a',
-    'b',
-    'c',
-    'd',
-    'e',
-    'f',
-    'g',
-    'h',
-    'i',
-    'j',
-    'k',
-    'l',
-    'm',
-    'n',
-    'o',
-    'p',
-    'q',
-    'r',
-    's',
-    't',
-    'u',
-    'v',
-    'w',
-    'x',
-    'y',
-    'z',
-  ];
-  let def = false;
-  alf.forEach(function (letter) {
-    if (str.toLowerCase().includes(letter)) {
-      def = true;
-    }
-  });
-  return def;
+  const regex = /[a-z]/;
+  const low = str.toLowerCase();
+  return regex.test(low);
+}
+
+function isBirthDateValid(date: string) {
+  if (date.length !== 10) {
+    return false;
+  }
+  try {
+    const formattedDays = date.split('/');
+    const epoch = new Date(
+      parseInt(formattedDays[2]),
+      parseInt(formattedDays[1]) - 1,
+      parseInt(formattedDays[0]),
+    ).getSeconds();
+    const now = Date.now() / 1000;
+    return epoch < now;
+  } catch {
+    return false;
+  }
 }
 
 async function isEmailAlreadyUsed(str: string) {
@@ -81,4 +73,10 @@ async function isEmailAlreadyUsed(str: string) {
     email: str,
   });
   return user !== null;
+}
+
+export async function hashPassword(password: string) {
+  const promiseCrypto = promisify(crypto.scrypt);
+  const derivedKey = (await promiseCrypto(password, 'salt', 10)) as Buffer;
+  return derivedKey.toString('hex');
 }

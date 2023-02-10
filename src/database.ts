@@ -5,7 +5,12 @@ export async function setupDatabase() {
   console.log('Database was connected!');
 }
 
-export const clearDatabase = async () => {
+export const dropDatabase = async () => {
   await AppDataSource.dropDatabase();
+  console.info(`Database Dropped!`);
+};
+
+export const clearDatabase = async () => {
+  await AppDataSource.query('TRUNCATE TABLE "user" CASCADE;');
   console.info(`Database Cleared!`);
 };

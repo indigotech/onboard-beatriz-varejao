@@ -4,3 +4,7 @@ export interface UserInput {
   birthDate: string;
   password: string;
 }
+export interface LogInputUser {
+  user: string;
+  password: string;
+}

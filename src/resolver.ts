@@ -1,27 +1,36 @@
-import { UserInput } from './UserInput';
-import { creatingUser } from './creating-user';
-import { AppDataSource } from './data-source';
-import { User } from './entity/User';
+import { UserInput, LogInputUser } from './user-input';
+import { creatingUser, hashPassword } from './creating-user';
+import { findUser, findUserById } from './find-user';
+import { CustomError } from './custom-errror';
+import { authorize, createToken } from './create-token';
 
 export const resolvers = {
   Mutation: {
-    createUser: async (_, args: { data: UserInput }) => {
+    createUser: async (_, args: { data: UserInput }, context) => {
       const { data } = args;
+      const token = context.headers.authorization;
+      authorize(token);
       const user = await creatingUser(data);
       return user;
     },
+    login: async (_, args: { data: LogInputUser; rememberMe?: boolean }) => {
+      const { data, rememberMe } = args;
+      const hash = await hashPassword(data.password);
+      const user = await findUser(data.user);
+      if (user.hash === hash) {
+        const token = createToken(user.id, rememberMe);
+        return { user, token };
+      }
+      throw new CustomError('Senha Incorreta', 401);
+    },
   },
   Query: {
-    hello: () => {
-      return 'Hello world!';
-    },
-    findUser: async (_, args: { id: number }) => {
+    user: async (_, args: { id: number }, context) => {
       const { id } = args;
-      const firstUser = await AppDataSource.getRepository(User)
-        .createQueryBuilder('user')
-        .where('user.id = :id', { id })
-        .getOne();
-      return firstUser;
+      const token = context.headers.authorization;
+      authorize(token);
+      const user = await findUserById(id);
+      return user;
     },
   },
 };
