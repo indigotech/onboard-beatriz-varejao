@@ -34,8 +34,7 @@ export const resolvers = {
     },
     users: async (_, args: { userToReturn: number }, context) => {
       let { userToReturn } = args;
-      const headers = context;
-      const token = headers.headers.authorization;
+      const token = context.headers.authorization;
       authorize(token);
       if (userToReturn == null) {
         userToReturn = (await lastUser()) - 1;
