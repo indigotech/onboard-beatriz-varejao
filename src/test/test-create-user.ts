@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { createdUser, createRepUser, queryBase } from './input';
+import { createdUser, createRepositoryUser, queryBase } from './input';
 import { createToken } from '../create-token';
 import { findUser } from '../find-user';
 import crypto from 'node:crypto';
@@ -39,7 +39,7 @@ describe('Testing createUser', () => {
       birthDate: '27/12/1900',
       password: 'mudar123',
     };
-    await createRepUser(input);
+    await createRepositoryUser(input);
     const response = await queryBase(createdUser, input, token);
     expect(response.data).to.be.eql({
       errors: [{ message: 'Email já utilizado', code: 400 }],

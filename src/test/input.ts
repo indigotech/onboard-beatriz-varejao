@@ -39,17 +39,6 @@ query user ($id: ID!) {
   }
 }`;
 
-export function expectResponse(id: number) {
-  const idd = `${id}`;
-  const expectedResponse = {
-    birthDate: '27/12/1900',
-    email: 'eu@gmail.com',
-    id: idd,
-    name: 'eu',
-  };
-  return expectedResponse;
-}
-
 export async function queryBase(query: string, input: UserInput, token: string) {
   const url = 'http://localhost:4000';
   const response = await axios.post(

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { mutlogin, createRepUser, queryBaseLog } from './input';
+import { mutlogin, createRepositoryUser, queryBaseLogin } from './input';
 import { authorize } from '../create-token';
 import { findUser } from '../find-user';
 import { LogInputUser } from 'user-input';
@@ -16,8 +16,8 @@ describe('Testing Login', () => {
       user: input.email,
       password: input.password,
     };
-    await createRepUser(input);
-    const response = await queryBaseLog(mutlogin, inputLog);
+    await createRepositoryUser(input);
+    const response = await queryBaseLogin(mutlogin, inputLog);
     const user = await findUser(input.email);
     const id = `${user.id}`;
     expect(response.data.data.login.user).to.be.deep.eq({
@@ -40,8 +40,8 @@ describe('Testing Login', () => {
       user: input.email,
       password: 'mud',
     };
-    await createRepUser(input);
-    const response = await queryBaseLog(mutlogin, inputLog);
+    await createRepositoryUser(input);
+    const response = await queryBaseLogin(mutlogin, inputLog);
     expect(response.data).to.be.eql({
       errors: [{ message: 'Senha Incorreta', code: 401 }],
       data: { login: null },
@@ -53,7 +53,7 @@ describe('Testing Login', () => {
       user: 'eu@gmail.com',
       password: 'mud',
     };
-    const response = await queryBaseLog(mutlogin, inputLog);
+    const response = await queryBaseLogin(mutlogin, inputLog);
     expect(response.data).to.be.eql({
       errors: [{ message: 'Usuário não encontrado', code: 404 }],
       data: { login: null },

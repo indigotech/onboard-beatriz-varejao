@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { queryUser, queryBaseUser, createRepUser } from './input';
+import { queryUser, queryBaseUser, createRepositoryUser } from './input';
 import { createToken } from '../create-token';
 import { findUser } from '../find-user';
 
@@ -11,7 +11,7 @@ describe('Testing Query User', () => {
       birthDate: '27/12/1900',
       password: 'mudar123',
     };
-    await createRepUser(input);
+    await createRepositoryUser(input);
     const user = await findUser(input.email);
     const token = createToken(0, true);
     const response = await queryBaseUser(queryUser, user.id, token);
