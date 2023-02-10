@@ -72,7 +72,7 @@ export async function queryBaseUser(query: string, id: number, token: string) {
   return response;
 }
 
-export async function queryBaseLog(query: string, input: LogInputUser) {
+export async function queryBaseLogin(query: string, input: LogInputUser) {
   const url = 'http://localhost:4000';
   const response = await axios.post(url, {
     query,
@@ -83,7 +83,7 @@ export async function queryBaseLog(query: string, input: LogInputUser) {
   return response;
 }
 
-export async function createRepUser(input: UserInput) {
+export async function createRepositoryUser(input: UserInput) {
   const user = new User();
   user.name = input.name;
   const promiseCrypto = promisify(crypto.scrypt);
