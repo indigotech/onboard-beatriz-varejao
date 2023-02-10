@@ -82,6 +82,20 @@ export async function queryBaseLogin(query: string, input: LogInputUser) {
   return response;
 }
 
+export async function queryBaseUsersList(query: string, limit: number, token: string) {
+  const url = 'http://localhost:4000';
+  const response = await axios.post(
+    url,
+    { query, variables: { limit } },
+    {
+      headers: {
+        authorization: token,
+      },
+    },
+  );
+  return response;
+}
+
 export async function createRepositoryUser(input: UserInput) {
   const user = new User();
   user.name = input.name;
