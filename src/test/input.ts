@@ -54,6 +54,20 @@ export async function queryBase(query: string, variables, token: string) {
   );
   return response;
 }
+export const queryUsers = `#graphql
+query users ($skip: Int, $limit: Int) {
+    users ( before: $skip, limit: $limit) {
+      users {
+      birthDate
+      email
+      id
+      name
+      },
+    total,
+    after,
+    before
+  }
+}`;
 
 export async function createRepositoryUser(input: UserInput) {
   const user = new User();
@@ -66,13 +80,3 @@ export async function createRepositoryUser(input: UserInput) {
   await AppDataSource.manager.save(user);
   console.log('Saved a new user with id: ' + user.id);
 }
-
-export const queryUsers = `#graphql
-query users ($limit: Int) {
-    users ( limit: $limit) {
-      birthDat
-      email
-      id
-      name
-  }
-}`;

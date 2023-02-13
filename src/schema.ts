@@ -32,10 +32,6 @@ export const typeDefs = `#graphql
   }
   type Query {
     user (id: ID!): User
-    users (limit: Int = 10): [User]
-
-  }
-  type Query {
-    users (before: Int, userToReturn: Int): Page
+    users (before: Int = 0, limit: Int = 10): Page
   }
 `;

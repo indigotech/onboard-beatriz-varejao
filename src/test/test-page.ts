@@ -1,86 +1,34 @@
-import axios from 'axios';
 import { expect } from 'chai';
-import { queryUsers } from './input';
+import { queryUsers, queryBase } from './input';
 import { createToken } from '../create-token';
-import { lastUser } from '../find-user';
+import { count } from '../find-user';
 import { seedUser } from '../seedex';
+import { AppDataSource } from '../data-source';
+import { User } from '../entity/User';
 
 describe('Testing Query Users', () => {
-  it.only('should return the infos of all users', async () => {
+  it('should return the infos of all users in the database', async () => {
     await seedUser(50);
-    const url = 'http://localhost:4000';
     const token = createToken(0, true);
-    const total = (await lastUser()) - 1;
+    const total = await count();
     for (let i = 0; i < 5; i++) {
       const skip = i * 10;
       const limit = 10;
-      const response = await axios.post(
-        url,
-        { query: queryUsers, variables: { skip, limit } },
-        {
-          headers: {
-            authorization: token,
-          },
-        },
-      );
+      const variables = { skip, limit };
+      const response = await queryBase(queryUsers, variables, token);
       expect(response.data.data.users.before).to.be.eql(skip);
       expect(response.data.data.users.total).to.be.eql(total);
       expect(response.data.data.users.after).to.be.eql(40 - skip);
-      expect(response.data.data.users.users.length).to.be.eql(10);
+      const users = await AppDataSource.getRepository(User).find({ order: { name: 'ASC' }, take: 10, skip: skip });
+      expect(response.data.data.users.users).to.be.deep.eq(
+        users.map((user) => ({
+          id: `${user.id}`,
+          email: user.email,
+          name: user.name,
+          birthDate: user.birthDate,
+        })),
+      ),
+        expect(response.data.data.users.users.length).to.be.eql(10);
     }
-  });
-  it('should return the infos of all users in the database', async () => {
-    const url = 'http://localhost:4000';
-    let token = createToken(1, true);
-    await axios.post(
-      url,
-      {
-        query: createdUser,
-        variables: {
-          user: {
-            name: 'eu',
-            email: 'eu@gmail.com',
-            birthDate: '27/12/1900',
-            password: 'mudar123',
-          },
-        },
-      },
-      {
-        headers: {
-          authorization: token,
-        },
-      },
-    );
-    token = createToken(2, true);
-    await axios.post(
-      url,
-      {
-        query: createdUser,
-        variables: {
-          user: {
-            name: 'bia',
-            email: 'bia@gmail.com',
-            birthDate: '27/12/1900',
-            password: 'mudar123',
-          },
-        },
-      },
-      {
-        headers: {
-          authorization: token,
-        },
-      },
-    );
-    token = createToken(0, true);
-    const response = await axios.post(
-      url,
-      { query: queryUsers },
-      {
-        headers: {
-          authorization: token,
-        },
-      },
-    );
-    expect(response.data.data.users).to.be.eql(expectedUsersNull);
   });
 });

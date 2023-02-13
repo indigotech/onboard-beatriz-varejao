@@ -12,9 +12,9 @@ export async function findUser(email: string): Promise<User> {
   return user;
 }
 
-export async function lastUser(): Promise<number> {
+export async function count(): Promise<number> {
   const cnt = await repository.count();
-  return cnt + 1;
+  return cnt;
 }
 
 export async function findUserById(id: number): Promise<User> {
