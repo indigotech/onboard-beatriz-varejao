@@ -58,10 +58,10 @@ export const queryUsers = `#graphql
 query users ($skip: Int, $limit: Int) {
     users ( before: $skip, limit: $limit) {
       users {
-      birthDate
-      email
-      id
-      name
+        birthDate
+        email
+        id
+        name
       },
     total,
     after,
