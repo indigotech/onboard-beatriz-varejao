@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { queryUsers, queryBase } from './input';
 import { createToken } from '../create-token';
 import { countUsers } from '../find-user';
-import { seedUser } from '../seedex';
+import { seedUser } from '../seed/seed-user';
 import { AppDataSource } from '../data-source';
 import { User } from '../entity/User';
 

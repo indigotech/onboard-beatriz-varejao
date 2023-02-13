@@ -1,5 +1,5 @@
-import { User } from './entity/User';
-import { AppDataSource } from './data-source';
+import { User } from '../entity/User';
+import { AppDataSource } from '../data-source';
 import crypto from 'node:crypto';
 import { promisify } from 'node:util';
 

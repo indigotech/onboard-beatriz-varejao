@@ -1,8 +1,8 @@
-import { User } from './entity/User';
-import { AppDataSource } from './data-source';
+import { User } from '../entity/User';
+import { AppDataSource } from '../data-source';
 import crypto from 'node:crypto';
 import { promisify } from 'node:util';
-import { setupDatabase } from './database';
+import { setupDatabase } from '../database';
 import * as dotenv from 'dotenv';
 
 seed('/test.env');
