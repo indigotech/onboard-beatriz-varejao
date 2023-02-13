@@ -24,17 +24,11 @@ export async function findUserById(id: number): Promise<User> {
   }
   return idUser;
 }
-<<<<<<< HEAD
-export async function listUsers(limit: number) {
-  return AppDataSource.getRepository(User).createQueryBuilder('user').orderBy('user.name').take(limit).getMany();
-=======
-export async function listUsers(toSkip: number, toList: number) {
-  const listUsers = await AppDataSource.getRepository(User)
+export async function listUsers(skip: number, limit: number) {
+  return await AppDataSource.getRepository(User)
     .createQueryBuilder('user')
-    .skip(toSkip)
-    .take(toList)
+    .skip(skip)
+    .take(limit)
     .orderBy('user.name')
     .getMany();
-  return listUsers;
->>>>>>> 8188a63 (pagination)
 }
