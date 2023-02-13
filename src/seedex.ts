@@ -60,8 +60,8 @@ export async function seedUser(n: number) {
     userEnt.email = user.email;
     userEnt.birthDate = user.birthDate;
     await AppDataSource.manager.save(userEnt);
-    console.log('Saved a new user with id: ' + userEnt.id);
   }
+  console.log('Saved', n, 'new users in the database');
 }
 
 function formatDate(date) {
