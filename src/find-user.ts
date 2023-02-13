@@ -24,3 +24,6 @@ export async function findUserById(id: number): Promise<User> {
   }
   return idUser;
 }
+export async function listUsers(limit: number) {
+  return AppDataSource.getRepository(User).createQueryBuilder('user').orderBy('user.name').take(limit).getMany();
+}

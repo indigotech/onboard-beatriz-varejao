@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { UserInput, LogInputUser } from '../user-input';
+import { UserInput } from '../user-input';
 import { User } from '../entity/User';
 import crypto from 'node:crypto';
 import { promisify } from 'node:util';
@@ -14,7 +14,6 @@ mutation createUser ($user: UserInput) {
       name
   }
 }`;
-
 export const mutlogin = `#graphql
 mutation login ( $user: LogInputUser) {
     login (data: $user ) { 
@@ -39,15 +38,13 @@ query user ($id: ID!) {
   }
 }`;
 
-export async function queryBase(query: string, input: UserInput, token: string) {
+export async function queryBase(query: string, variables, token: string) {
   const url = 'http://localhost:4000';
   const response = await axios.post(
     url,
     {
       query,
-      variables: {
-        user: input,
-      },
+      variables,
     },
     {
       headers: {
@@ -55,31 +52,6 @@ export async function queryBase(query: string, input: UserInput, token: string) 
       },
     },
   );
-  return response;
-}
-
-export async function queryBaseUser(query: string, id: number, token: string) {
-  const url = 'http://localhost:4000';
-  const response = await axios.post(
-    url,
-    { query, variables: { id } },
-    {
-      headers: {
-        authorization: token,
-      },
-    },
-  );
-  return response;
-}
-
-export async function queryBaseLogin(query: string, input: LogInputUser) {
-  const url = 'http://localhost:4000';
-  const response = await axios.post(url, {
-    query,
-    variables: {
-      user: input,
-    },
-  });
   return response;
 }
 
@@ -94,3 +66,13 @@ export async function createRepositoryUser(input: UserInput) {
   await AppDataSource.manager.save(user);
   console.log('Saved a new user with id: ' + user.id);
 }
+
+export const queryUsers = `#graphql
+query users ($limit: Int) {
+    users ( limit: $limit) {
+      birthDate
+      email
+      id
+      name
+  }
+}`;

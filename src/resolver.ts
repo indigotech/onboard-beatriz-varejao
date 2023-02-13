@@ -1,6 +1,6 @@
 import { UserInput, LogInputUser } from './user-input';
 import { creatingUser, hashPassword } from './creating-user';
-import { findUser, findUserById } from './find-user';
+import { findUser, findUserById, listUsers } from './find-user';
 import { CustomError } from './custom-errror';
 import { authorize, createToken } from './create-token';
 
@@ -31,6 +31,12 @@ export const resolvers = {
       authorize(token);
       const user = await findUserById(id);
       return user;
+    },
+    users: async (_, args: { limit: number }, context) => {
+      const { limit } = args;
+      const token = context.headers.authorization;
+      authorize(token);
+      return listUsers(limit);
     },
   },
 };

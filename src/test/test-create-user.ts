@@ -14,7 +14,10 @@ describe('Testing createUser', () => {
       birthDate: '27/12/1900',
       password: 'mudar123',
     };
-    const response = await queryBase(createdUser, input, token);
+    const variables = {
+      user: input,
+    };
+    const response = await queryBase(createdUser, variables, token);
     const user = await findUser(input.email);
     expect(user.name).to.be.eq(input.name);
     expect(user.birthDate).to.be.eq(input.birthDate);
@@ -22,11 +25,10 @@ describe('Testing createUser', () => {
     const derivedKey = (await promiseCrypto(input.password, 'salt', 10)) as Buffer;
     const hash = derivedKey.toString('hex');
     expect(user.hash).to.be.eq(hash);
-    const id = `${user.id}`;
     expect(response.data.data.createUser).to.be.deep.eq({
       birthDate: user.birthDate,
       email: user.email,
-      id,
+      id: `${user.id}`,
       name: input.name,
     });
   });
@@ -39,8 +41,11 @@ describe('Testing createUser', () => {
       birthDate: '27/12/1900',
       password: 'mudar123',
     };
+    const variables = {
+      user: input,
+    };
     await createRepositoryUser(input);
-    const response = await queryBase(createdUser, input, token);
+    const response = await queryBase(createdUser, variables, token);
     expect(response.data).to.be.eql({
       errors: [{ message: 'Email já utilizado', code: 400 }],
       data: { createUser: null },
@@ -55,7 +60,10 @@ describe('Testing createUser', () => {
       birthDate: '27/12/1900',
       password: 'mud',
     };
-    const response = await queryBase(createdUser, input, token);
+    const variables = {
+      user: input,
+    };
+    const response = await queryBase(createdUser, variables, token);
     expect(response.data).to.be.eql({
       errors: [
         {
@@ -75,7 +83,10 @@ describe('Testing createUser', () => {
       birthDate: 'BBB',
       password: 'mudar123',
     };
-    const response = await queryBase(createdUser, input, token);
+    const variables = {
+      user: input,
+    };
+    const response = await queryBase(createdUser, variables, token);
     expect(response.data).to.be.eql({
       errors: [{ message: 'Data de nascimento inválida', code: 400 }],
       data: { createUser: null },
