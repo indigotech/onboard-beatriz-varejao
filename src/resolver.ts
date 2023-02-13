@@ -33,12 +33,9 @@ export const resolvers = {
       return user;
     },
     users: async (_, args: { limit: number }, context) => {
-      let { limit } = args;
+      const { limit } = args;
       const token = context.headers.authorization;
       authorize(token);
-      if (limit == null) {
-        limit = 10;
-      }
       return listUsers(limit);
     },
   },
