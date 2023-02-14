@@ -16,6 +16,12 @@ export const typeDefs = `#graphql
     user: User!
     token: String!
   }
+  type Page {
+    users: [User]!
+    total: Int!
+    before: Int!
+    after: Int!
+  }
   input LogInputUser {
     user: String!
     password: String!
@@ -26,7 +32,6 @@ export const typeDefs = `#graphql
   }
   type Query {
     user (id: ID!): User
-    users (limit: Int = 10): [User]
-
+    users (before: Int = 0, limit: Int = 10): Page
   }
 `;

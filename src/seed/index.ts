@@ -1,13 +1,13 @@
-import { User } from './entity/User';
-import { AppDataSource } from './data-source';
+import { User } from '../entity/User';
+import { AppDataSource } from '../data-source';
 import crypto from 'node:crypto';
 import { promisify } from 'node:util';
-import { setupDatabase } from './database';
+import { setupDatabase } from '../database';
 import * as dotenv from 'dotenv';
 
 seed('/test.env');
 
-async function seed(dir) {
+export async function seed(dir) {
   dotenv.config({ path: process.cwd() + dir });
   await setupDatabase();
   const alf = [

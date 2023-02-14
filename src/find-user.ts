@@ -12,9 +12,8 @@ export async function findUser(email: string): Promise<User> {
   return user;
 }
 
-export async function lastUser(): Promise<number> {
-  const cnt = await repository.count();
-  return cnt + 1;
+export function countUsers(): Promise<number> {
+  return repository.count();
 }
 
 export async function findUserById(id: number): Promise<User> {
@@ -24,6 +23,11 @@ export async function findUserById(id: number): Promise<User> {
   }
   return idUser;
 }
-export async function listUsers(limit: number) {
-  return AppDataSource.getRepository(User).createQueryBuilder('user').orderBy('user.name').take(limit).getMany();
+export async function listUsers(skip: number, limit: number) {
+  return await AppDataSource.getRepository(User)
+    .createQueryBuilder('user')
+    .skip(skip)
+    .take(limit)
+    .orderBy('user.name')
+    .getMany();
 }
