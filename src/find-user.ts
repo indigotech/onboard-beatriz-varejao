@@ -12,8 +12,8 @@ export async function findUser(email: string): Promise<User> {
   return user;
 }
 
-export async function countUsers(): Promise<number> {
-  return await repository.count();
+export function countUsers(): Promise<number> {
+  return repository.count();
 }
 
 export async function findUserById(id: number): Promise<User> {
