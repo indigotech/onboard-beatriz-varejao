@@ -4,6 +4,9 @@ import { User } from '../entity/User';
 import crypto from 'node:crypto';
 import { promisify } from 'node:util';
 import { AppDataSource } from '../data-source';
+import { Address } from '../entity/Address';
+import { AddressInput } from '../address';
+import { findUser } from '../find-user';
 
 export const createdUser = `#graphql
 mutation createUser ($user: UserInput) {
@@ -36,15 +39,15 @@ query user ($id: ID!) {
       birthDate
       email
       name
-      adress {
+      address {
         id,
         CEP,
-        Street,
-        StreetNumber,
-        Complement,
-        Neighborhood,
-        City,
-        State
+        street,
+        streetNumber,
+        complement,
+        neighborhood,
+        city,
+        state
       }
   }
 }`;
@@ -66,47 +69,25 @@ export async function queryBase(query: string, variables, token: string) {
   return response;
 }
 
-export const responseAdress1 = {
-  id: '1',
-  CEP: '09030-010',
-  street: 'rua X',
-  streetNumber: '121',
-  complement: 'ap22',
-  neighborhood: 'bairro a',
-  city: 'cidade das esmeraldas',
-  state: 'ww',
-  user: {
-    birthDate: '27/12/1900',
-    email: 'eu@gmail.com',
-    id: '1',
-    name: 'eu',
-  },
-};
-
-export const responseAddress2 = {
-  id: '2',
-  CEP: '04119-903',
-  street: 'rua W',
-  streetNumber: '33',
-  complement: 'ap11',
-  neighborhood: 'bairro b',
-  city: 'cidade dos jasmins',
-  state: 'xx',
-  user: {
-    birthDate: '27/12/1900',
-    email: 'eu@gmail.com',
-    id: '1',
-    name: 'eu',
-  },
-};
-
-export const userError = [
-  {
-    message: 'Operação não autorizada',
-    code: 405,
-    details: 'token inválido',
-  },
-];
+export const createdAddress = `#graphql
+mutation createAddress ($address: AddressInput, $email: String ) {
+    createAddress (address: $address, username: $email  ) {
+      id,
+      CEP,
+      street,
+      streetNumber,
+      complement,
+      neighborhood,
+      city,
+      state,
+      user {
+        birthDate,
+        email,
+        id,
+        name,
+      }
+    }
+}`;
 
 export const queryUsers = `#graphql
 query users ($skip: Int, $limit: Int) {
@@ -116,6 +97,16 @@ query users ($skip: Int, $limit: Int) {
         email
         id
         name
+        address {
+        id,
+        CEP,
+        street,
+        streetNumber,
+        complement,
+        neighborhood,
+        city,
+        state
+      }
       },
     total,
     after,
@@ -133,4 +124,19 @@ export async function createRepositoryUser(input: UserInput) {
   user.birthDate = input.birthDate;
   await AppDataSource.manager.save(user);
   console.log('Saved a new user with id: ' + user.id);
+}
+
+export async function createRepositoryAddress(address: AddressInput, username: string) {
+  const user = await findUser(username);
+  const addressData = new Address();
+  addressData.CEP = address.CEP;
+  addressData.complement = address.complement;
+  addressData.city = address.city;
+  addressData.neighborhood = address.neighborhood;
+  addressData.state = address.state;
+  addressData.street = address.street;
+  addressData.streetNumber = address.streetNumber;
+  addressData.user = user;
+  await AppDataSource.manager.save(addressData);
+  user.address.concat([addressData]);
 }

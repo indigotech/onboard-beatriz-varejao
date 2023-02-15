@@ -59,16 +59,11 @@ export const typeDefs = `#graphql
   }
   type Mutation {
   createUser (data: UserInput): User
+  createAddress (address: AddressInput, username: String): UserAddress
   login (data: LogInputUser, rememberMe: Boolean): LogUser
   }
   type Query {
     user (id: ID!): User
     users (before: Int = 0, limit: Int = 10): Page
-  }
-  type Query {
-    users (before: Int, userToReturn: Int): Page
-  }
-  type Mutation {
-    createAddress (adress: AddressInput, username: String): UserAddress
   }
 `;

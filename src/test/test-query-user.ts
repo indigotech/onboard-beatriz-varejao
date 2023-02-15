@@ -1,7 +1,9 @@
 import { expect } from 'chai';
-import { queryUser, createRepositoryUser, queryBase } from './input';
+import { queryUser, createRepositoryUser, queryBase, createRepositoryAddress } from './input';
 import { createToken } from '../create-token';
 import { findUser } from '../find-user';
+import { AppDataSource } from '../data-source';
+import { Address } from '../entity/Address';
 
 describe('Testing Query User', () => {
   it('should fetch the infos of the first user', async () => {
@@ -17,6 +19,7 @@ describe('Testing Query User', () => {
     const variables = { id: user.id };
     const response = await queryBase(queryUser, variables, token);
     expect(response.data.data.user).to.be.deep.eq({
+      address: [],
       birthDate: user.birthDate,
       email: user.email,
       id: `${user.id}`,
@@ -43,5 +46,55 @@ describe('Testing Query User', () => {
         details: 'token inválido',
       },
     ]);
+  });
+
+  it('should fetch the infos of the user and its address', async () => {
+    const input = {
+      name: 'eu',
+      email: 'eu@gmail.com',
+      birthDate: '27/12/1900',
+      password: 'mudar123',
+    };
+    await createRepositoryUser(input);
+    const token = createToken(0, true);
+    const address = {
+      CEP: '09030-010',
+      street: 'rua X',
+      streetNumber: '121',
+      complement: 'ap22',
+      neighborhood: 'bairro a',
+      city: 'cidade das esmeraldas',
+      state: 'ww',
+    };
+    await createRepositoryAddress(address, input.email);
+    const user = await findUser(input.email);
+    const variables = { id: user.id };
+    const response = await queryBase(queryUser, variables, token);
+    const addressRepo = await AppDataSource.getRepository(Address).findOne({
+      where: {
+        CEP: address.CEP,
+      },
+      relations: {
+        user: true,
+      },
+    });
+    expect(response.data.data.user).to.be.deep.eq({
+      address: [
+        {
+          id: `${addressRepo.id}`,
+          CEP: addressRepo.CEP,
+          street: addressRepo.street,
+          streetNumber: addressRepo.streetNumber,
+          complement: addressRepo.complement,
+          neighborhood: addressRepo.neighborhood,
+          city: addressRepo.city,
+          state: addressRepo.state,
+        },
+      ],
+      birthDate: user.birthDate,
+      email: user.email,
+      id: `${user.id}`,
+      name: input.name,
+    });
   });
 });

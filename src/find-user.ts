@@ -24,7 +24,7 @@ export function countUsers(): Promise<number> {
 }
 
 export async function findUserById(id: number): Promise<User> {
-  const idUser = repository.findOne({
+  const idUser = await repository.findOne({
     where: {
       id,
     },

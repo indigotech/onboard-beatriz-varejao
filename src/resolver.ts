@@ -16,22 +16,22 @@ export const resolvers = {
       const user = await creatingUser(data);
       return user;
     },
-    createAddress: async (_, args: { adress: AddressInput; username: string }) => {
-      const { adress, username } = args;
+    createAddress: async (_, args: { address: AddressInput; username: string }) => {
+      const { address, username } = args;
       const user = await findUser(username);
-      const adressData = new Address();
-      adressData.CEP = adress.CEP;
-      adressData.complement = adress.complement;
-      adressData.city = adress.city;
-      adressData.neighborhood = adress.neighborhood;
-      adressData.state = adress.state;
-      adressData.street = adress.street;
-      adressData.streetNumber = adress.streetNumber;
-      adressData.user = user;
-      await AppDataSource.manager.save(adressData);
-      user.address.concat([adressData]);
-      console.log('Saved a new adress with id: ' + adressData.id);
-      return adressData;
+      const addressData = new Address();
+      addressData.CEP = address.CEP;
+      addressData.complement = address.complement;
+      addressData.city = address.city;
+      addressData.neighborhood = address.neighborhood;
+      addressData.state = address.state;
+      addressData.street = address.street;
+      addressData.streetNumber = address.streetNumber;
+      addressData.user = user;
+      await AppDataSource.manager.save(addressData);
+      user.address.concat([addressData]);
+      console.log('Saved a new adress with id: ' + addressData.id);
+      return addressData;
     },
     login: async (_, args: { data: LogInputUser; rememberMe?: boolean }) => {
       const { data, rememberMe } = args;
