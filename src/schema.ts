@@ -6,7 +6,7 @@ export const typeDefs = `#graphql
      password: String! 
   }
   input AddressInput {
-    CEP: String!
+    cep: String!
     street: String!
     streetNumber: String!
     complement: String
@@ -24,7 +24,7 @@ export const typeDefs = `#graphql
   }
   type UserAddress {
     id: ID!
-    CEP: String!
+    cep: String!
     street: String!
     streetNumber: String!
     complement: String
@@ -35,7 +35,7 @@ export const typeDefs = `#graphql
   }
   type Address {
     id: ID!
-    CEP: String!
+    cep: String!
     street: String!
     streetNumber: String!
     complement: String

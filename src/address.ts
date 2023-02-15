@@ -1,5 +1,5 @@
 export interface AddressInput {
-  CEP: string;
+  cep: string;
   street: string;
   streetNumber: string;
   complement: string;

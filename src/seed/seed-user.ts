@@ -99,7 +99,7 @@ export async function seedAddress(n: number) {
   for (let i = 0; i < n; i++) {
     const user = { name: '', email: '', birthDate: '', password: '' };
     const address = {
-      CEP: '',
+      cep: '',
       street: 'rua ',
       streetNumber: '',
       complement: 'apto',
@@ -126,7 +126,7 @@ export async function seedAddress(n: number) {
       user.email = user.email + num[random];
       user.password = user.password + num[random];
       address.complement = address.complement + num[random];
-      address.CEP = address.CEP + num[random];
+      address.cep = address.cep + num[random];
       address.streetNumber = address.streetNumber + num[random];
     }
     user.email = user.email + '@gmail.com';
@@ -139,7 +139,7 @@ export async function seedAddress(n: number) {
     userEnt.birthDate = user.birthDate;
     await AppDataSource.manager.save(userEnt);
     const addressData = new Address();
-    addressData.CEP = address.CEP;
+    addressData.cep = address.cep;
     addressData.complement = address.complement;
     addressData.city = address.city;
     addressData.neighborhood = address.neighborhood;

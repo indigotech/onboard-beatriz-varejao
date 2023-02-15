@@ -41,7 +41,7 @@ query user ($id: ID!) {
       name
       address {
         id,
-        CEP,
+        cep,
         street,
         streetNumber,
         complement,
@@ -73,7 +73,7 @@ export const createdAddress = `#graphql
 mutation createAddress ($address: AddressInput, $email: String ) {
     createAddress (address: $address, username: $email  ) {
       id,
-      CEP,
+      cep,
       street,
       streetNumber,
       complement,
@@ -99,7 +99,7 @@ query users ($skip: Int, $limit: Int) {
         name
         address {
         id,
-        CEP,
+        cep,
         street,
         streetNumber,
         complement,
@@ -129,7 +129,7 @@ export async function createRepositoryUser(input: UserInput) {
 export async function createRepositoryAddress(address: AddressInput, username: string) {
   const user = await findUser(username);
   const addressData = new Address();
-  addressData.CEP = address.CEP;
+  addressData.cep = address.cep;
   addressData.complement = address.complement;
   addressData.city = address.city;
   addressData.neighborhood = address.neighborhood;

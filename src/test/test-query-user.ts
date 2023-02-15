@@ -58,7 +58,7 @@ describe('Testing Query User', () => {
     await createRepositoryUser(input);
     const token = createToken(0, true);
     const address = {
-      CEP: '09030-010',
+      cep: '09030-010',
       street: 'rua X',
       streetNumber: '121',
       complement: 'ap22',
@@ -72,7 +72,7 @@ describe('Testing Query User', () => {
     const response = await queryBase(queryUser, variables, token);
     const addressRepo = await AppDataSource.getRepository(Address).findOne({
       where: {
-        CEP: address.CEP,
+        cep: address.cep,
       },
       relations: {
         user: true,
@@ -82,7 +82,7 @@ describe('Testing Query User', () => {
       address: [
         {
           id: `${addressRepo.id}`,
-          CEP: addressRepo.CEP,
+          cep: addressRepo.cep,
           street: addressRepo.street,
           streetNumber: addressRepo.streetNumber,
           complement: addressRepo.complement,

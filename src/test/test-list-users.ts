@@ -115,7 +115,7 @@ describe('Testing Query Users', () => {
         address: [
           {
             id: `${user.address[0].id}`,
-            CEP: user.address[0].CEP,
+            cep: user.address[0].cep,
             street: user.address[0].street,
             streetNumber: user.address[0].streetNumber,
             complement: user.address[0].complement,
