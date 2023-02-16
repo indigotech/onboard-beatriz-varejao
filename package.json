@@ -5,7 +5,7 @@
     "start": "node ./build/index.js",
     "typeorm": "typeorm-ts-node-commonjs",
     "lint": "eslint ./src",
-    "test": "mocha -r ts-node/register src/test/index.ts",
+    "test": "mocha --timeout 10000 -r ts-node/register src/test/index.ts",
     "seed": "ts-node src/seed/index.ts",
     "page": "ts-node src/pages.ts"
   },

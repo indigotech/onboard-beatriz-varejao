@@ -9,6 +9,7 @@ before(async () => {
 });
 require('./test-create-user');
 require('./test-login');
+require('./test-create-address.ts');
 require('./test-query-user');
 require('./test-list-users');
 
