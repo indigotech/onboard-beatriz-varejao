@@ -39,7 +39,7 @@ export async function findUserById(id: number): Promise<User> {
 }
 
 export async function listUsers(skip: number, limit: number) {
-  return await repository
+  return repository
     .createQueryBuilder('user')
     .leftJoinAndSelect('user.address', 'address')
     .skip(skip)
