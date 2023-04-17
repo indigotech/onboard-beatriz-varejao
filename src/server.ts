@@ -11,7 +11,7 @@ export async function setupServer() {
     formatError,
   });
   const { url } = await startStandaloneServer(server, {
-    listen: { port: 4000 },
+    listen: { port: 4001 },
     context: async ({ req }) => {
       const headers = req.headers;
       return { headers };
