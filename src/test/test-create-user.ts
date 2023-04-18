@@ -88,7 +88,7 @@ describe('Testing createUser', () => {
     };
     const response = await queryBase(createdUser, variables, token);
     expect(response.data).to.be.eql({
-      errors: [{ message: 'Data de nascimento inválida', code: 400 }],
+      errors: [{ message: 'Data de nascimento inválida (a data deve estar no formato 00/00/0000)', code: 400 }],
       data: { createUser: null },
     });
   });

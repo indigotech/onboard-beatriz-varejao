@@ -9,6 +9,9 @@ services:
       - POSTGRES_USER=euzinha12
       - POSTGRES_PASSWORD=abc123
       - POSTGRES_DB=local
+      - FOREST_ENV_SECRET=fafc5829b18fb821650af7bf4b33890f95b8f8213a4b1e38061553db45319c1a
+      - FOREST_AUTH_SECFRET=da9fc61baa01ce45b6383f0d151efa2876c17b1a23fd5e4d
+      - DATABASE_URL: postgres://euzinha12:abc123@localhost:5432/local
 
   testdb:
     image: postgres:15.1

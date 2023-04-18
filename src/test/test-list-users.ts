@@ -2,12 +2,12 @@ import { expect } from 'chai';
 import { queryUsers, queryBase } from './input';
 import { createToken } from '../create-token';
 import { countUsers } from '../find-user';
-import { seedUser } from '../seed/seed-user';
+import { seedAddress, seedUser } from '../seed/seed-user';
 import { AppDataSource } from '../data-source';
 import { User } from '../entity/User';
 
 describe('Testing Query Users', () => {
-  it('should return the infos of all users in the databasethe first 10 users', async () => {
+  it('should return the infos of the first 10 users', async () => {
     await seedUser(50);
     const token = createToken(0, true);
     const total = await countUsers();
@@ -18,9 +18,10 @@ describe('Testing Query Users', () => {
     expect(response.data.data.users.before).to.be.eql(skip);
     expect(response.data.data.users.total).to.be.eql(total);
     expect(response.data.data.users.after).to.be.eql(40 - skip);
-    const users = await AppDataSource.getRepository(User).find({ order: { name: 'ASC' }, take: 10, skip: skip });
+    const users = await AppDataSource.getRepository(User).find({ order: { name: 'ASC' }, take: limit, skip: skip });
     expect(response.data.data.users.users).to.be.deep.eq(
       users.map((user) => ({
+        address: [],
         id: `${user.id}`,
         email: user.email,
         name: user.name,
@@ -44,6 +45,7 @@ describe('Testing Query Users', () => {
     const users = await AppDataSource.getRepository(User).find({ order: { name: 'ASC' }, take: 10, skip: skip });
     expect(response.data.data.users.users).to.be.deep.eq(
       users.map((user) => ({
+        address: [],
         id: `${user.id}`,
         email: user.email,
         name: user.name,
@@ -67,6 +69,7 @@ describe('Testing Query Users', () => {
     const users = await AppDataSource.getRepository(User).find({ order: { name: 'ASC' }, take: 10, skip: skip });
     expect(response.data.data.users.users).to.be.deep.eq(
       users.map((user) => ({
+        address: [],
         id: `${user.id}`,
         email: user.email,
         name: user.name,
@@ -88,5 +91,45 @@ describe('Testing Query Users', () => {
     expect(response.data.data.users.total).to.be.eql(total);
     expect(response.data.data.users.after).to.be.eql(0);
     expect(response.data.data.users.users).to.be.deep.eq([]);
+  });
+
+  it('should return the infos of the first 10 users', async () => {
+    await seedAddress(50);
+    const token = createToken(0, true);
+    const total = await countUsers();
+    const skip = 0;
+    const limit = 10;
+    const variables = { skip, limit };
+    const response = await queryBase(queryUsers, variables, token);
+    expect(response.data.data.users.before).to.be.eql(skip);
+    expect(response.data.data.users.total).to.be.eql(total);
+    expect(response.data.data.users.after).to.be.eql(40 - skip);
+    const users = await AppDataSource.getRepository(User).find({
+      order: { name: 'ASC' },
+      take: limit,
+      skip: skip,
+      relations: { address: true },
+    });
+    expect(response.data.data.users.users).to.be.deep.eq(
+      users.map((user) => ({
+        address: [
+          {
+            id: `${user.address[0].id}`,
+            cep: user.address[0].cep,
+            street: user.address[0].street,
+            streetNumber: user.address[0].streetNumber,
+            complement: user.address[0].complement,
+            neighborhood: user.address[0].neighborhood,
+            city: user.address[0].city,
+            state: user.address[0].state,
+          },
+        ],
+        id: `${user.id}`,
+        email: user.email,
+        name: user.name,
+        birthDate: user.birthDate,
+      })),
+    );
+    expect(response.data.data.users.users.length).to.be.eql(10);
   });
 });

@@ -4,6 +4,9 @@ import { User } from '../entity/User';
 import crypto from 'node:crypto';
 import { promisify } from 'node:util';
 import { AppDataSource } from '../data-source';
+import { Address } from '../entity/Address';
+import { AddressInput } from '../address';
+import { findUser } from '../find-user';
 
 export const createdUser = `#graphql
 mutation createUser ($user: UserInput) {
@@ -14,6 +17,7 @@ mutation createUser ($user: UserInput) {
       name
   }
 }`;
+
 export const mutlogin = `#graphql
 mutation login ( $user: LogInputUser) {
     login (data: $user ) { 
@@ -35,6 +39,16 @@ query user ($id: ID!) {
       birthDate
       email
       name
+      address {
+        id,
+        cep,
+        street,
+        streetNumber,
+        complement,
+        neighborhood,
+        city,
+        state
+      }
   }
 }`;
 
@@ -54,6 +68,27 @@ export async function queryBase(query: string, variables, token: string) {
   );
   return response;
 }
+
+export const createdAddress = `#graphql
+mutation createAddress ($address: AddressInput, $email: String ) {
+    createAddress (address: $address, username: $email  ) {
+      id,
+      cep,
+      street,
+      streetNumber,
+      complement,
+      neighborhood,
+      city,
+      state,
+      user {
+        birthDate,
+        email,
+        id,
+        name,
+      }
+    }
+}`;
+
 export const queryUsers = `#graphql
 query users ($skip: Int, $limit: Int) {
     users ( before: $skip, limit: $limit) {
@@ -62,6 +97,16 @@ query users ($skip: Int, $limit: Int) {
         email
         id
         name
+        address {
+        id,
+        cep,
+        street,
+        streetNumber,
+        complement,
+        neighborhood,
+        city,
+        state
+      }
       },
     total,
     after,
@@ -79,4 +124,19 @@ export async function createRepositoryUser(input: UserInput) {
   user.birthDate = input.birthDate;
   await AppDataSource.manager.save(user);
   console.log('Saved a new user with id: ' + user.id);
+}
+
+export async function createRepositoryAddress(address: AddressInput, username: string) {
+  const user = await findUser(username);
+  const addressData = new Address();
+  addressData.cep = address.cep;
+  addressData.complement = address.complement;
+  addressData.city = address.city;
+  addressData.neighborhood = address.neighborhood;
+  addressData.state = address.state;
+  addressData.street = address.street;
+  addressData.streetNumber = address.streetNumber;
+  addressData.user = user;
+  await AppDataSource.manager.save(addressData);
+  user.address.concat([addressData]);
 }
